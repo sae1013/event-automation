@@ -66,8 +66,10 @@ const Right = styled.div`
 function EventMaker(props) {
   const { register, handleSubmit,watch, formState: { errors } } = useForm();
   // console.log('error',errors)
-
+  const ref = React.useRef();
+  const fileRef = React.useRef();
   const onSubmit = data => {
+    // 파일리더에서 imageSrc도 가져온다.
     console.log(data)
     // console.log(errors)
   }
@@ -87,11 +89,51 @@ function EventMaker(props) {
     setEventKey(filteredKey)
   }
 
+  const uploadImage = () => {
+    console.dir(ref.current.childNodes[0])
+    const targetImageSrc = ref.current.childNodes[0]
+    targetImageSrc.src = 'public/web3.png'
+    targetImageSrc.onload = (src) => {console.log(src)}
+  }
+
+  function readFile(event) {
+    textarea.textContent = event.target.result;
+    console.log(event.target.result);
+  }
+
+  function changeFile(e) {
+    let reader = new FileReader();
+    console.log(e.target.files[0])
+    const file = e.target.files[0];
+    if (file) {
+      reader.readAsDataURL(file);
+      reader.onloadend = function(src){
+        console.log(src.currentTarget.result)
+        const targetImageSrc = ref.current.childNodes[0]
+        targetImageSrc.src = src.currentTarget.result
+      }
+    }
+
+    // var file = fileRef.current;
+    // console.log(file)
+    // var reader = new FileReader();
+    // reader.addEventListener('load', readFile);
+    // reader.readAsText(file);
+  }
+
   return (
     <Container>
       <Title>Enroll Event</Title>
-      <ImageWrap>
-        <img src={"public/web3.png"}/>
+      <input type="file"
+             id="event" name="event"
+             accept="image/*"
+             onChange={(e)=>{
+               changeFile(e)
+             }}
+      />
+
+      <ImageWrap ref = {ref}>
+        <img/>
       </ImageWrap>
 
       <Contents>
@@ -131,6 +173,10 @@ function EventMaker(props) {
                   <div>
                     <label>쿠폰번호</label>
                     <input {...register(`section${key}_couponNumber`, {required:true,})}/>
+                  </div>
+                  <div>
+                    <label>이벤트 타입</label>
+                    <input {...register(`section${key}_type`, {required:true,})}/>
                   </div>
                   <div>
                     <label>좌표</label>
