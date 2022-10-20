@@ -1,0 +1,136 @@
+.container {
+  position: relative;
+  padding: 1rem;
+  padding-bottom: 4rem;
+  .floating { // 플로팅 박스
+    position: fixed;
+    right:2rem;
+    bottom: 2rem;
+    width: 120px;
+    //background: #7895B2;
+    border: 1px solid #7895B2;
+    border-radius: 10px;
+    &__item {
+
+      padding: .5rem 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      > span {
+        margin-left: 5px;
+      }
+    }
+    &__item:not(:last-child) {
+      border-bottom: 1px solid #bbb;
+    }
+  }
+}
+
+.header {
+  font-size: 1.5rem;
+  padding-top: 1rem;
+  text-align: center;
+
+}
+
+section.event__image {
+  .preview__image {
+    width: 100%;
+    min-height:300px;
+    > img {
+      width: 100%;
+    }
+  }
+}
+
+
+section.event__info {
+  margin-top: 1rem;
+  border-top: 1px solid #bbb;
+  padding-top: 1rem;
+
+}
+
+.tutorial1 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hookForm {
+  $height: 70px;
+
+  > div {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: .8rem;
+  }
+
+  input {
+    font-size: 1rem;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(#7895B2, 0.4);
+    //border-radius: $height / 2;
+    height: $height;
+    width: 80%;
+  }
+
+  .coord__box {
+    display: flex;
+    margin-top: 1.5rem;
+
+    > div { // 각 박스영역
+      min-width:200px;
+      box-shadow: 0 0 5px rgba(#7895B2,0.9);
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+
+      > p {
+        margin-top: 1.5rem;
+        font-size: 1rem;
+        margin-bottom: .5rem;
+      }
+
+      > div {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        font-size: .9rem;
+      }
+
+      input {
+        height: 1rem;
+      }
+    }
+    div:not(:first-child) {
+      margin-left: 30px;
+    }
+
+  }
+}
+
+button.btn {
+  &__rndBox, &__eventAdd  {
+    background-color:#7895B2;
+    color:white;
+    margin-right: 10px;
+  }
+
+  &__submitForm {
+    width: 100%;
+    font-weight: 800;
+    color: #f2f2f2;
+    font-size: 1.3rem;
+    padding: 1.5rem;
+    margin-top: 1.7rem;
+    background-color:#00ABB3;
+  }
+}

@@ -1,8 +1,12 @@
 import React,{useRef} from 'react'
 import "./App.css";
-import {Link, Routes, Route} from 'react-router-dom';
+import {Link, Route,Switch} from 'react-router-dom';
 import EventMaker from './components/EventMaker.jsx';
+import DashBoard from './components/DashBoard.jsx';
+
 import {useSelector, useDispatch} from 'react-redux';
+import './styles/common/reset.scss'
+
 import {increment} from './redux/slices/counterSlice.js'
 import styled from 'styled-components';
 import {Rnd} from 'react-rnd';
@@ -24,33 +28,40 @@ function App(props) {
     const {x,y} = ref.current.draggable.state
     console.log(x,y)
     console.log(ref.current.resizable.state.width,ref.current.resizable.state.height)
-    //해당값을 찾아오면 됨. 
+
   }
   return (
     <div className="container">
-        
-    <Rnd
-      ref = {ref}
-      onClick={onClick}
-      default={{
-        x: 300,
-        y: 300,
-        width: 300,
-        height: 100,
 
-      }}
-      // minWidth={100}
-      // minHeight={100}
-      bounds="parent"
-    >
-      {/* <Box /> */}
-    </Rnd>
+    {/*<Rnd*/}
+    {/*  ref = {ref}*/}
+    {/*  onClick={onClick}*/}
+    {/*  default={{*/}
+    {/*    x: 300,*/}
+    {/*    y: 300,*/}
+    {/*    width: 300,*/}
+    {/*    height: 100,*/}
+
+    {/*  }}*/}
+    {/*  // minWidth={100}*/}
+    {/*  // minHeight={100}*/}
+    {/*  bounds="parent"*/}
+    {/*>*/}
+    {/*  /!* <Box /> *!/*/}
+    {/*</Rnd>*/}
   
           
-        <Routes>
-          <Route path={"/form"} element={<FormValidate/>}></Route>
-          <Route path="/event-maker" element = {<EventMaker/>}></Route>
-        </Routes>
+        <Switch>
+          <Route path={"/form"}>
+            <FormValidate/>
+          </Route>
+          <Route path="/eventform">
+            <EventMaker/>
+          </Route>
+          <Route path="/dashboard">
+            <DashBoard/>
+          </Route>
+        </Switch>
     </div>
   )
 }
