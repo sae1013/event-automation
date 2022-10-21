@@ -134,3 +134,11 @@ button.btn {
     background-color:#00ABB3;
   }
 }
+
+.form {
+  &__errors {
+    color: red;
+    font-size: 0.8rem;
+    transform: translateY(-10px);
+  }
+}

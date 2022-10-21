@@ -1,10 +1,11 @@
-import React,{useRef} from 'react';
-import styles from '../../styles/event/EnrollEvent.module.scss';
-import {AiFillInfoCircle} from 'react-icons/ai';
-import {BsBook} from 'react-icons/bs';
+import React, { useRef } from 'react'
+import styles from '../../styles/event/EnrollEvent.module.scss'
+import { AiFillInfoCircle } from 'react-icons/ai'
+import { BsBook } from 'react-icons/bs'
+import { useForm } from 'react-hook-form'
 
 function EnrollEvent(props) {
-  const imageRef = useRef();
+  const imageRef = useRef()
 
   function fileHandler(e) {
     let reader = new FileReader()
@@ -15,15 +16,35 @@ function EnrollEvent(props) {
       reader.onloadend = function(src) {
         console.log(src.currentTarget.result)
         const targetImageSrc = imageRef.current.childNodes[0]
-        console.log('dd',targetImageSrc);
+        console.log('dd', targetImageSrc)
         targetImageSrc.src = src.currentTarget.result
       }
     }
   }
-  const submitHandler = (e) => {
-    e.preventDefault();
+
+  const submitHandler = (data) => {
+    console.log('data',data)
+    const formData = {
+
+    }
+    // 이벤트 이미지 로드
+    const imageElement = imageRef.current.childNodes[0];
+    if(!imageElement){
+      // 에러 모달 띄워주기
+      console.error('이벤트 이미지가 없습니다')
+      return
+    }
+    console.log('이미지',imageElement.src)
+
 
   }
+
+  const { register, handleSubmit, onBlur, formState: { errors }, setError } = useForm({
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
+
+  })
+  console.log(errors)
   return (
     <div className={styles.container}>
       {/*<div className={styles.floating}>*/}
@@ -46,32 +67,48 @@ function EnrollEvent(props) {
                onChange={(event) => fileHandler(event)}>
         </input>
         <div ref={imageRef} className={styles.preview__image}>
-          <img/>
+          <img />
         </div>
         <button className={styles.btn__rndBox}>사이즈측정 켜기</button>
         <button className={styles.btn__rndBox}>사이즈측정 끄기</button>
       </section>
       <section className={styles.event__info}>
-        <p className={styles.tutorial1}>2. 이벤트 정보를 입력하세요</p>
-        <form className={styles.hookForm} onSubmit={submitHandler}>
+        <p className={styles.tutorial2}>2. 이벤트 정보를 입력하세요</p>
+        <form className={styles.hookForm} onSubmit={handleSubmit(submitHandler)}>
           <div>
             <label>이벤트 이름</label>
-            <input type="text"/>
+            {errors?.eventName && <p className={styles.form__errors}>{errors.eventName.message}</p>}
+            <input type='text' {...register('eventName', {
+              required: '필수 입력값',
+              minLength: { value: 1, message: '최소 1글자 이상' },
+            })} />
           </div>
 
           <div>
             <label>이벤트 시작날짜</label>
-            <input type="calendar"/>
+            {errors?.eventStartDate && <p className={styles.form__errors}>{errors.eventStartDate.message}</p>}
+            <input type='text' {...register('eventStartDate', {
+              required: '필수 입력값',
+              minLength: { value: 1, message: '최소 1글자 이상' },
+            })} />
           </div>
 
           <div>
             <label>이벤트 종료날짜</label>
-            <input type="calendar"/>
+            {errors?.eventEndDate && <p className={styles.form__errors}>{errors.eventEndDate.message}</p>}
+            <input type='text' {...register('eventEndDate', {
+              required: '필수 입력값',
+              minLength: { value: 1, message: '최소 1글자 이상' },
+            })} />
           </div>
 
           <div>
             <label>이벤트 푸터 (이벤트 하단)</label>
-            <input type="calendar"/>
+            {errors?.eventFooter && <p className={styles.form__errors}>{errors.eventFooter.message}</p>}
+            <input type='text' {...register('eventFooter', {
+              required: '필수 입력값',
+              minLength: { value: 1, message: '최소 1글자 이상' },
+            })} />
           </div>
           <div>
             <button className={styles.btn__eventAdd}>영역 추가</button>
@@ -81,50 +118,33 @@ function EnrollEvent(props) {
               <p>영역1</p>
               <div>
                 <label>쿠폰번호</label>
-                <input type={"text"}/>
+                {errors?.couponNumber && <p className={styles.form__errors}>{errors.couponNumber.message}</p>}
+                <input type='text' {...register('couponNumber', {
+                  required: '필수 입력값',
+                  minLength: { value: 1, message: '최소 1글자 이상' },
+                })} />
               </div>
               <div>
                 <label>이벤트 타입</label>
-                <input type={"text"}/>
+                {errors?.eventType && <p className={styles.form__errors}>{errors.eventType.message}</p>}
+                <input type='text' {...register('eventType', {
+                  required: '필수 입력값',
+                  minLength: { value: 1, message: '최소 1글자 이상' },
+                })} />
               </div>
               <div>
                 <label>좌표(x,y)</label>
-                <input></input>
+                {errors?.coordXY && <p className={styles.form__errors}>{errors.coordXY.message}</p>}
+                <input type='text' {...register('coordXY', {
+                  required: '필수 입력값',
+                  minLength: { value: 1, message: '최소 2글자 이상' },
+                })} />
               </div>
             </div>
-            <div>
-              <p>영역1</p>
-              <div>
-                <label>쿠폰번호</label>
-                <input type={"text"}/>
-              </div>
-              <div>
-                <label>이벤트 타입</label>
-                <input type={"text"}/>
-              </div>
-              <div>
-                <label>좌표(x,y)</label>
-                <input></input>
-              </div>
-            </div>
-            <div>
-              <p>영역1</p>
-              <div>
-                <label>쿠폰번호</label>
-                <input type={"text"}/>
-              </div>
-              <div>
-                <label>이벤트 타입</label>
-                <input type={"text"}/>
-              </div>
-              <div>
-                <label>좌표(x,y)</label>
-                <input></input>
-              </div>
-            </div>
+
           </div>
 
-          <button type={"submit"} className={styles.btn__submitForm}>이벤트 생성</button>
+          <button type={'submit'} className={styles.btn__submitForm}>이벤트 생성</button>
         </form>
 
       </section>

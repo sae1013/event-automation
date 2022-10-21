@@ -6,15 +6,22 @@ export default function App() {
     reValidateMode:'onChange'
 
   });
-  const onSubmit = data => console.log('submit',data);
+  const onSubmit = data => {
+    if(Object.keys(errors).length != 0){
+      console.log('에러',errors)
+      return
+    }
+    console.log('submit',data);
+  }
 
-  console.log(errors)
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("firstName" , {required: "This is required." , minLength :{value:2, message:'hello'} })}  />
+      <input {...register("firstName" , {required: "This is required." , minLength :{value:2, message:'최소2글자입력'} })}  />
       <p>{errors.firstName?.message}</p>
 
-      <input type="submit" />
+      <input {...register("phoneNumber" , {required: "This is required." , minLength :{value:2, message:'숫자만입력'} })}  />
+      <p>{errors.phoneNumber?.message}</p>
+      <button type="submit">제출</button>
     </form>
   );
 }
