@@ -1,15 +1,18 @@
-import React, { useRef } from 'react'
+import React, { useRef,useState } from 'react'
 import styles from '../../styles/event/EnrollEvent.module.scss'
 import { AiFillInfoCircle } from 'react-icons/ai'
 import { BsBook } from 'react-icons/bs'
 import { useForm } from 'react-hook-form'
+import {Rnd} from 'react-rnd';
 
 function EnrollEvent(props) {
   const imageRef = useRef()
+  const RndRef = useRef();
+  const [showRnd,setShowRnd] = useState(false);
 
   function fileHandler(e) {
     let reader = new FileReader()
-    console.log(e.target.files[0])
+    // console.log(e.target.files[0])
     const file = e.target.files[0]
     if (file) {
       reader.readAsDataURL(file)
@@ -25,8 +28,9 @@ function EnrollEvent(props) {
   const submitHandler = (data) => {
     console.log('data',data)
     const formData = {
-
+      ...data
     }
+
     // 이벤트 이미지 로드
     const imageElement = imageRef.current.childNodes[0];
     if(!imageElement){
@@ -34,9 +38,35 @@ function EnrollEvent(props) {
       console.error('이벤트 이미지가 없습니다')
       return
     }
-    console.log('이미지',imageElement.src)
+    console.dir(imageElement);
 
 
+
+  }
+
+  const coordHandler = () => {
+    // 이미지 사이즈 구하기
+    const imageElement = imageRef.current.childNodes[0];
+    const intrinsicWidth = imageElement.naturalWidth;
+    const intrinsicHeight = imageElement.naturalHeight;
+    const renderedWidth = imageElement.clientWidth;
+    const renderedHeight = imageElement.clientHeight;
+
+    let posX1 = RndRef.current.draggable.state.x
+    let posY1 = RndRef.current.draggable.state.y
+    let boxWidth = RndRef.current.resizable.state.width
+    let boxHeight = RndRef.current.resizable.state.height
+    let posX2 = posX1+boxWidth;
+    let posY2 = posY1+boxHeight;
+    const moduler = 10**4
+
+    const absoluteX1 = Math.round((intrinsicWidth * posX1 / renderedWidth)*moduler) / moduler;
+    const absoluteY1 = Math.round((intrinsicHeight * posY1 / renderedHeight)*moduler) / moduler;
+    const absoluteX2 = Math.round((intrinsicWidth * posX2 / renderedWidth)*moduler) / moduler;
+    const absoluteY2 = Math.round((intrinsicHeight * posY2 / renderedHeight)*moduler) / moduler;
+    console.log(absoluteX1,absoluteY1,absoluteX2,absoluteY2);
+    const ret = `x1:${absoluteX1},y1:${absoluteY1},x2:${absoluteX2},y2:${absoluteY2}`
+    window.alert(ret)
   }
 
   const { register, handleSubmit, onBlur, formState: { errors }, setError } = useForm({
@@ -68,9 +98,27 @@ function EnrollEvent(props) {
         </input>
         <div ref={imageRef} className={styles.preview__image}>
           <img />
+          {showRnd && <Rnd
+            className={"react-draggable-custom"}
+            ref = {RndRef}
+            onClick={()=>{}}
+            default={{
+              x: 200,
+              y: 200,
+              width: 300,
+              height: 100,
+
+            }}
+            // minWidth={100}
+            // minHeight={100}
+            bounds="parent"
+          >
+            {/* <Box /> */}
+          </Rnd>}
         </div>
-        <button className={styles.btn__rndBox}>사이즈측정 켜기</button>
-        <button className={styles.btn__rndBox}>사이즈측정 끄기</button>
+        <button className={styles.btn__rndBox} onClick={()=>setShowRnd(true)}>사이즈측정 켜기</button>
+        <button onClick = {coordHandler} className={styles.btn__rndBox}>좌표값 확인</button>
+        <button className={styles.btn__rndBox} onClick={()=>setShowRnd(false)}>사이즈측정 끄기</button>
       </section>
       <section className={styles.event__info}>
         <p className={styles.tutorial2}>2. 이벤트 정보를 입력하세요</p>

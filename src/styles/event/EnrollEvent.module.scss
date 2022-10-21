@@ -36,6 +36,7 @@
 section.event__image {
   .preview__image {
     width: 100%;
+    position: relative;
     min-height:300px;
     > img {
       width: 100%;
