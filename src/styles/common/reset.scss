@@ -1,12 +1,20 @@
+@import './_global.scss';
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
+html {
+  color: var(--black-font-color);
+}
 
-body {
-  padding: 0;
+body,div,span,h1,h2,h3,h4,h5,h6,p {
   margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-family: inherit;
+
 }
 
 ul {

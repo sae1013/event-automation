@@ -1,7 +1,16 @@
 // src/mocks/handlers.js
 import { rest } from 'msw'
+import {db} from '../db/event.js';
 
+const baseURL = 'https://localhost:8080'
 export const handlers = [
+  rest.get(`${baseURL}/event/:id`, (req,res,ctx) => {
+    const eventId = req.params.id
+    const event = db.events[eventId];
+
+    return res(ctx.status(200),ctx.json(event))
+  }),
+
   rest.post('/login', (req, res, ctx) => {
     // Persist user's authentication in the session
     sessionStorage.setItem('is-authenticated', 'true')
