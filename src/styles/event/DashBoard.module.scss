@@ -1,4 +1,8 @@
-$--primary-color : #06283D;
+$--primary-color : #30336b;
+$--highlight-color : #686de0;
+$--secondary-color: #051137;
+$--highlight-secondary-color: #8992B0;
+
 @import '../common/_global.scss';
 
 .container {
@@ -12,17 +16,20 @@ $--primary-color : #06283D;
   min-height: 100vh;
   //flex: 0;
   background: $--primary-color;
+  //background: $--secondary-color;
+  box-shadow:0 0 30px #fff;
   color:#fff;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 2px;
-
+  transition: all 0.5s;
   > ul {
-    padding: 5rem 2rem;
+    padding: 5rem 0;
     position: sticky;
     top:0;
 
     li {
       margin-bottom: 3rem;
+      text-align: center;
     }
   }
 
@@ -33,4 +40,12 @@ $--primary-color : #06283D;
   min-width: 824px;
   min-height:100vh;
   background:var(--primary-bg-color);
+}
+
+.highlight {
+  transition-property : background-color;
+  transition-duration:0.3s;
+  background-color: $--highlight-secondary-color;
+  padding: 20px 0 ;
+  border-left: 10px solid $--highlight-color;
 }

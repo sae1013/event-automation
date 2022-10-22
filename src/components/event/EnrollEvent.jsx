@@ -97,7 +97,7 @@ function EnrollEvent(props) {
                onChange={(event) => fileHandler(event)}>
         </input>
         <div ref={imageRef} className={styles.preview__image}>
-          <img />
+          <img src={"https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png"}/>
           {showRnd && <Rnd
             className={"react-draggable-custom"}
             ref = {RndRef}

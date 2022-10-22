@@ -1,17 +1,22 @@
-import React,{useRef,useEffect} from 'react'
+import React,{useRef,useEffect,useState} from 'react'
 import {Event130} from '../../utils/EventData';
 import styles from '../../styles/event/EventPage.module.scss';
+
+//third-party
+import debounce from 'debounce';
+
 // 절대좌표 -> 상대좌표로 환산 후 이미지맵 적용
 function EventPage(props) {
   const event = Event130;
   const imageRef = useRef();
   const areaRef = useRef();
+  const [isImgLoaded,setIsImgLoaded] = useState('false');
 
   const getPosition = (posArr) => { // string -> int Array
     const ret = posArr.split(',')
     return ret.map((pos)=> parseFloat(pos))
   }
-  const buttonHandler = () => {
+  const getImageMapCoord = () => {
     const intrinsicWidth = imageRef.current.naturalWidth;
     const intrinsicHeight = imageRef.current.naturalHeight;
     const renderedWidth = imageRef.current.clientWidth;
@@ -23,26 +28,40 @@ function EventPage(props) {
     let relativeY1 = Math.round((absoluteY1 * renderedHeight / intrinsicHeight)*moduler) / moduler
     let relativeX2 = Math.round((absoluteX2 * renderedWidth / intrinsicWidth)*moduler) / moduler
     let relativeY2 = Math.round((absoluteY2 * renderedHeight / intrinsicHeight)*moduler) / moduler
-    // console.log(absoluteX1,absoluteY1,absoluteX2,absoluteY2);
-    // console.log(relativeX1,relativeY1,relativeX2,relativeY2)
+
     const coordArr = [relativeX1,relativeY1,relativeX2,relativeY2];
     const parsedCoordString = coordArr.join(",")
     return parsedCoordString;
-    // console.log(parsedCoordString);
   }
 
+  const defaultCoords = '132.4229,338.5225,543.9648,417.8018';
   useEffect(() => {
-    console.log(areaRef.current.coords)
-    areaRef.current.coords = buttonHandler();
-    console.log(areaRef.current)
+    const resizeCallback = debounce(() => {
+      areaRef.current.coords = getImageMapCoord()
+      console.log('resize')
+
+    })
+
+    const id = window.addEventListener('resize',resizeCallback)
+
+    return () => {
+      window.removeEventListener('resize',resizeCallback);
+    }
   },[])
+
+  useEffect(() => {
+    console.log(isImgLoaded);
+    if(!isImgLoaded) return
+    areaRef.current.coords = getImageMapCoord();
+  },[isImgLoaded])
   // "132.4229,338.5225,543.9648,417.8018"
+
   return(
     <div className={styles.container}>
       <div className={styles.eventWrapper}>
-        <img ref={imageRef} src ={event.eventImageUrl} alt={"eventPage"} useMap={"#imageMap"}/>
+        <img onLoad = {() => setIsImgLoaded} ref={imageRef} src ={event.eventImageUrl} alt={"eventPage"} useMap={"#imageMap"}/>
         <map name={"imageMap"}>
-          <area ref = {areaRef} shape="rect" coords={"132.4229,338.5225,543.9648,417.8018"} alt="Computer" onClick={buttonHandler}/>
+          <area ref = {areaRef} shape="rect" alt="Computer"/>
         </map>
       </div>
     </div>
