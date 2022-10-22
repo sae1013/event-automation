@@ -34,12 +34,12 @@ function EventPage(props) {
     const ret = posArr.split(',')
     return ret.map((pos)=> parseFloat(pos))
   }
-  const getImageMapCoord = () => {
+
+  const getImageMapCoord = (coordString) => {
     const intrinsicWidth = imageRef.current.naturalWidth;
     const intrinsicHeight = imageRef.current.naturalHeight;
     const renderedWidth = imageRef.current.clientWidth;
     const renderedHeight = imageRef.current.clientHeight;
-    let coordString = event.eventArea.area1.coord
     let [absoluteX1,absoluteY1,absoluteX2,absoluteY2] = getPosition(coordString);
     const moduler = 10**4;
     let relativeX1 = Math.round((absoluteX1 * renderedWidth / intrinsicWidth)*moduler) / moduler // 상대좌표
@@ -52,28 +52,50 @@ function EventPage(props) {
     return parsedCoordString;
   }
 
-  const defaultCoords = '132.4229,338.5225,543.9648,417.8018';
   useEffect(() => {
+    if(!areaRef.current) return
     const resizeCallback = debounce(() => {
-      areaRef.current.coords = getImageMapCoord()
+      if(!isImgLoaded) return // 이미지 로드
 
+      const childNodes = areaRef.current.childNodes
+      for(let i = 0 ; i<childNodes.length; i++){
+
+        const childNodes = areaRef.current.childNodes;
+        childNodes[i].coords = getImageMapCoord(eventData.eventArea[i].coord)
+      }
     })
 
+    window.addEventListener('resize',resizeCallback)
     return () => {
+      console.log('remove')
       window.removeEventListener('resize',resizeCallback);
     }
-  },[])
+  },[areaRef.current])
 
   useEffect(() => {
     fetchData();
   },[])
 
   useEffect(() => {
-    console.log(isImgLoaded);
-    if(!isImgLoaded) return
-    areaRef.current.coords = getImageMapCoord();
-  },[isImgLoaded])
-  // "132.4229,338.5225,543.9648,417.8018"
+
+    if(!isImgLoaded) return // 이미지 로드
+    if(areaRef.current == null){ // 이미지맵 로드
+      return
+    }
+
+    const childNodes = areaRef.current.childNodes;
+
+    if(childNodes.length !== eventData.eventArea.length) {
+      console.log('등록된 Area의 갯수와 이미지맵 Area의 갯수가 일치하지 않습니다.')
+      return
+    }
+
+    for(let i = 0 ; i<childNodes.length; i++){
+      childNodes[i].coords = getImageMapCoord(eventData.eventArea[i].coord)
+    }
+
+  },[isImgLoaded,areaRef.current])
+
 
   if(isLoading) {
     return <div>Loading...</div>
@@ -90,8 +112,12 @@ function EventPage(props) {
 
       <div className={styles.eventWrapper}>
         <img onLoad = {() => setIsImgLoaded(true)} ref={imageRef} src ={eventData?.eventImageUrl} alt={"eventPage"} useMap={"#imageMap"}/>
-        <map name={"imageMap"}>
-          <area ref = {areaRef} shape="rect" alt="Computer"/>
+        <map name={"imageMap"} ref = {areaRef}>
+          {eventData?.eventArea.map((area,idx) => {
+            return (
+              <area key={idx} shape="rect" alt="eventBtn"/>
+            )
+          })}
         </map>
       </div>
 
