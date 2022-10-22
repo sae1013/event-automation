@@ -1,5 +1,9 @@
-export const parseEventFooter = (footerStr) => {
-  // const description = footerStr.split('<\d')
 
+export const parseSpaceString = (str) => {
+  let splited = str.split('\n');
+  if(splited[splited.length-1] === ""){
+    splited.pop();
+  }
+  return splited;
 
 }

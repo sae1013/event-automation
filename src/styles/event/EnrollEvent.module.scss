@@ -55,8 +55,13 @@ section.event__info {
 .tutorial1 {
   font-size: 1rem;
   margin-bottom: 1rem;
+  font-weight: 600;
 }
 
+.tutorial2 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
 .hookForm {
   $height: 70px;
 
@@ -70,6 +75,12 @@ section.event__info {
     margin-bottom: .8rem;
   }
 
+  select {
+    border: none;
+    width: 80%;
+    padding: .7rem;
+    box-shadow: 0 0 10px rgba(#7895B2, 0.4);
+  }
   input {
     font-size: 1rem;
     padding: 1rem;
@@ -80,18 +91,48 @@ section.event__info {
     height: $height;
     width: 80%;
   }
+  textarea {
+    width: 80%;
+    height: 200px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(#7895B2, 0.4);
+    resize:none;
+    padding: 1rem;
+  }
 
   .coord__box {
-    display: flex;
-    margin-top: 1.5rem;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+    grid-gap:1rem;
 
-    > div { // 각 박스영역
+
+    .closeBtn {
+      display: inline-block;
+      position: absolute;
+      right: 0.6rem;
+      top:0.6rem;
+      transition: all 0.3s;
+    }
+    .closeBtn:hover {
+      cursor:pointer;
+      //transition: all 0.2s;
+      opacity: 0.6;
+    }
+
+    .coord__item {
+      position: relative;
+      padding: 0 10px;
+    }
+
+    > div {
       min-width:200px;
       box-shadow: 0 0 5px rgba(#7895B2,0.9);
       display: flex;
       flex-wrap: wrap;
       flex-direction: column;
-      align-items: center;
+      //align-items: center;
 
       > p {
         margin-top: 1.5rem;
@@ -111,9 +152,7 @@ section.event__info {
         height: 1rem;
       }
     }
-    div:not(:first-child) {
-      margin-left: 30px;
-    }
+
 
   }
 }

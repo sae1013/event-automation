@@ -2,7 +2,6 @@ import React,{useRef,useEffect,useState} from 'react'
 import {Event130} from '../../utils/EventData';
 import styles from '../../styles/event/EventPage.module.scss';
 
-import {parseEventFooter} from '../../utils/parseUtil.js'
 //third-party
 import debounce from 'debounce';
 import axios from 'axios';

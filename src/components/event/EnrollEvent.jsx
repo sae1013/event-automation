@@ -1,44 +1,77 @@
 import React, { useRef,useState } from 'react'
 import styles from '../../styles/event/EnrollEvent.module.scss'
-import { AiFillInfoCircle } from 'react-icons/ai'
-import { BsBook } from 'react-icons/bs'
 import { useForm } from 'react-hook-form'
 import {Rnd} from 'react-rnd';
+import {parseSpaceString} from '../../utils/parseUtil.js';
+import {AiFillCloseCircle} from 'react-icons/ai';
 
 function EnrollEvent(props) {
   const imageRef = useRef()
   const RndRef = useRef();
   const [showRnd,setShowRnd] = useState(false);
+  const [coordBox,setCoordBox] = useState([0]); // key 값
+
 
   function fileHandler(e) {
     let reader = new FileReader()
-    // console.log(e.target.files[0])
     const file = e.target.files[0]
     if (file) {
       reader.readAsDataURL(file)
       reader.onloadend = function(src) {
-        console.log(src.currentTarget.result)
         const targetImageSrc = imageRef.current.childNodes[0]
-        console.log('dd', targetImageSrc)
         targetImageSrc.src = src.currentTarget.result
       }
     }
   }
+  const addCoordBoxHandler = (e) => {
+    e.preventDefault();
+    if(coordBox.length === 0){
+      setCoordBox([0])
+      return
+    }
+    setCoordBox([...coordBox,coordBox[coordBox.length-1]+1 ])
+
+  }
+
+  const removeCoordBoxHandler = (e) => {
+    const deleteId = parseInt(e.target.parentNode.getAttribute('data-index'))
+    console.log(deleteId)
+    const filtered = coordBox.filter((id) => id !== deleteId )
+    setCoordBox(filtered)
+  }
 
   const submitHandler = (data) => {
-    console.log('data',data)
-    const formData = {
-      ...data
+
+    // 이벤트 영역 데이터 뽑기
+    const eventArea = []
+    for(let i = 0; i<coordBox.length; i++){
+      const newArea = {};
+      newArea[`eventType`] = data[`eventType-${coordBox[i]}`]
+      newArea[`couponNumber`] = data[`couponNumber-${coordBox[i]}`]
+      newArea[`coordXY`] = data[`coordXY-${coordBox[i]}`]
+
+      eventArea.push(newArea);
     }
 
-    // 이벤트 이미지 로드
+    //이미지 뽑기
     const imageElement = imageRef.current.childNodes[0];
     if(!imageElement){
       // 에러 모달 띄워주기
       console.error('이벤트 이미지가 없습니다')
       return
     }
-    console.dir(imageElement);
+
+    const formData = {
+      eventTitle:data.eventTitle,
+      eventImageUrl:imageElement.src,
+      eventStartDate:data.eventStartDate,
+      eventEndDate:data.eventEndDate,
+      eventArea,
+      eventFooter: parseSpaceString(data.eventFooter)
+    }
+    console.log(formData)
+    // 이벤트 이미지 로드
+
 
 
 
@@ -125,8 +158,8 @@ function EnrollEvent(props) {
         <form className={styles.hookForm} onSubmit={handleSubmit(submitHandler)}>
           <div>
             <label>이벤트 이름</label>
-            {errors?.eventName && <p className={styles.form__errors}>{errors.eventName.message}</p>}
-            <input type='text' {...register('eventName', {
+            {errors?.eventTitle && <p className={styles.form__errors}>{errors.eventTitle.message}</p>}
+            <input type='text' {...register('eventTitle', {
               required: '필수 입력값',
               minLength: { value: 1, message: '최소 1글자 이상' },
             })} />
@@ -135,7 +168,7 @@ function EnrollEvent(props) {
           <div>
             <label>이벤트 시작날짜</label>
             {errors?.eventStartDate && <p className={styles.form__errors}>{errors.eventStartDate.message}</p>}
-            <input type='text' {...register('eventStartDate', {
+            <input type='date' {...register('eventStartDate', {
               required: '필수 입력값',
               minLength: { value: 1, message: '최소 1글자 이상' },
             })} />
@@ -144,7 +177,7 @@ function EnrollEvent(props) {
           <div>
             <label>이벤트 종료날짜</label>
             {errors?.eventEndDate && <p className={styles.form__errors}>{errors.eventEndDate.message}</p>}
-            <input type='text' {...register('eventEndDate', {
+            <input type='date' {...register('eventEndDate', {
               required: '필수 입력값',
               minLength: { value: 1, message: '최소 1글자 이상' },
             })} />
@@ -153,42 +186,52 @@ function EnrollEvent(props) {
           <div>
             <label>이벤트 푸터 (이벤트 하단)</label>
             {errors?.eventFooter && <p className={styles.form__errors}>{errors.eventFooter.message}</p>}
-            <input type='text' {...register('eventFooter', {
-              required: '필수 입력값',
-              minLength: { value: 1, message: '최소 1글자 이상' },
-            })} />
+            <textarea type='text' {...register('eventFooter')} />
           </div>
           <div>
-            <button className={styles.btn__eventAdd}>영역 추가</button>
+            <button className={styles.btn__eventAdd} onClick={addCoordBoxHandler}>영역 추가</button>
           </div>
+          {/* 하단 영역 박스*/}
           <div className={styles.coord__box}>
-            <div>
-              <p>영역1</p>
-              <div>
-                <label>쿠폰번호</label>
-                {errors?.couponNumber && <p className={styles.form__errors}>{errors.couponNumber.message}</p>}
-                <input type='text' {...register('couponNumber', {
-                  required: '필수 입력값',
-                  minLength: { value: 1, message: '최소 1글자 이상' },
-                })} />
-              </div>
-              <div>
-                <label>이벤트 타입</label>
-                {errors?.eventType && <p className={styles.form__errors}>{errors.eventType.message}</p>}
-                <input type='text' {...register('eventType', {
-                  required: '필수 입력값',
-                  minLength: { value: 1, message: '최소 1글자 이상' },
-                })} />
-              </div>
-              <div>
-                <label>좌표(x,y)</label>
-                {errors?.coordXY && <p className={styles.form__errors}>{errors.coordXY.message}</p>}
-                <input type='text' {...register('coordXY', {
-                  required: '필수 입력값',
-                  minLength: { value: 1, message: '최소 2글자 이상' },
-                })} />
-              </div>
-            </div>
+            {coordBox.map((id) => {
+              return (
+                <div key = {id} className={styles.coord__item}>
+                  <span className={styles.closeBtn} data-index={id} onClick = {removeCoordBoxHandler}>
+                    <AiFillCloseCircle data-index={id} style={{width:'30px',height:'30px',fill:'#d63031'}}></AiFillCloseCircle>
+                  </span>
+                  <p>{`이미지맵 영역`}</p>
+                  <div>
+                    <label>이벤트 타입</label>
+                    {/*{errors[`eventType-${id}`] && <p className={styles.form__errors}>{errors[`eventType-${id}`].message}</p>}*/}
+                    <select name="event-type" {...register(`eventType-${id}`)}>
+                      <option value={"getCoupon"}>쿠폰받기</option>
+                      <option value={"link"}>링크이동</option>
+                    </select>
+                    {/*<input type='text' {...register(`eventType-${id}`, {*/}
+                    {/*  required: '필수 입력값',*/}
+                    {/*  minLength: { value: 1, message: '최소 1글자 이상' },*/}
+                    {/*})} />*/}
+                  </div>
+                  <div>
+                    <label>쿠폰번호 or 링크</label>
+                    {errors[`couponNumber-${id}`] && <p className={styles.form__errors}>{errors[`couponNumber-${id}`].message}</p>}
+                    <input type='text' {...register(`couponNumber-${id}`, {
+                      required: '필수 입력값',
+                      minLength: { value: 1, message: '최소 1글자 이상' },
+                    })} />
+                  </div>
+
+                  <div>
+                    <label>좌표(x,y)</label>
+                    {errors[`coordXY-${id}`]&& <p className={styles.form__errors}>{errors[`coordXY-${id}`].message}</p>}
+                    <input type='text' {...register(`coordXY-${id}`, {
+                      required: '필수 입력값',
+                      minLength: { value: 1, message: '최소 2글자 이상' },
+                    })} />
+                  </div>
+                </div>
+              )
+            })}
 
           </div>
 
