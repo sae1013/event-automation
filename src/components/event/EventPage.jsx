@@ -1,9 +1,11 @@
 import React,{useRef,useEffect,useState} from 'react'
 import {Event130} from '../../utils/EventData';
 import styles from '../../styles/event/EventPage.module.scss';
-import axios from 'axios';
+
+import {parseEventFooter} from '../../utils/parseUtil.js'
 //third-party
 import debounce from 'debounce';
+import axios from 'axios';
 const requestURL = 'https://localhost:8080/event/130'
 
 // 절대좌표 -> 상대좌표로 환산 후 이미지맵 적용
@@ -17,11 +19,14 @@ function EventPage(props) {
 
   const fetchData = async() => {
     setIsLoading(true)
-    const result = await axios.get(requestURL)
+    try{
+      const result = await axios.get(requestURL)
+      setEventData(result.data);
+      setIsLoading(false);
+    }catch (e) {
 
-    console.log(result.data)
-    setEventData(result.data);
-    setIsLoading(false);
+    }
+
 
   }
 
@@ -79,8 +84,8 @@ function EventPage(props) {
 
       <div className={styles.pageTitle}> 진행중인 이벤트 </div>
       <div className={styles.eventHeader}>
-        <h1 className={styles.eventTitle}>웹툰 이벤트</h1>
-        <p className={styles.eventDate}>2022.10.18~2022.10.29</p>
+        <h1 className={styles.eventTitle}>{eventData?.eventTitle}</h1>
+        <p className={styles.eventDate}>{`${eventData?.eventStartDate} ~ ${eventData?.eventEndDate}`}</p>
       </div>
 
       <div className={styles.eventWrapper}>
@@ -93,15 +98,13 @@ function EventPage(props) {
       <div className={styles.eventFooter}>
         <p>이벤트 상세설명</p>
         <ul>
-          <li>
-            <span>• 이벤트 기간 : ~2022.11.20(일)</span>
-          </li>
-          <li>
-            <span>• 쿠폰 유효기간 : 발급일로부터 20일 간</span>
-          </li>
-          <li>
-            <span>• 본 이벤트는 에버랜드 이용 고객분들께 지급되는 쿠폰입니다.</span>
-          </li>
+        {eventData?.eventFooter.map((description,idx) => {
+          return (
+            <li key = {idx}>
+              <span>• {description}</span>
+            </li>
+          )
+        })}
         </ul>
       </div>
 
@@ -110,11 +113,3 @@ function EventPage(props) {
 }
 
 export default EventPage;
-
-// 이벤트 기간 : ~2022.11.20(일)
-// 쿠폰 유효기간 : 발급일로부터 20일 간
-// 본 이벤트는 에버랜드 이용 고객분들께 지급되는 쿠폰입니다.
-//   본 쿠폰은 ID 1개당 1회 발급 가능하며, 중복 사용이 불가합니다.
-//   포토북 쿠폰은 8*8 사이즈 한정 및 2만원 이상 결제 시 사용할 수 있으며, 에버랜드 해피 할로윈 포토북에 한해 적용됩니다.
-//   본 쿠폰은 혜택 적용 대상 상품 외 다른 상품 구매 시에는 사용하실 수 없습니다.
-//   본 이벤트는 당사 사정에 따라 별도 고지없이 경품 변경 및 조기 종료 될 수 있습니다.
