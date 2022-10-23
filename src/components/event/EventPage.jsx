@@ -5,7 +5,7 @@ import {useParams,useLocation} from 'react-router-dom';
 //third-party
 import debounce from 'debounce';
 import axios from 'axios';
-const requestURL = 'https://localhost:8080/event/130'
+const requestURL = 'http://localhost:8080/event/130'
 
 // 절대좌표 -> 상대좌표로 환산 후 이미지맵 적용
 function EventPage(props) {
@@ -18,10 +18,11 @@ function EventPage(props) {
 
   const params = useParams();
 
-  const fetchData = async() => {
+  const fetchData = async(eventId) => {
     setIsLoading(true)
     try{
-      const result = await axios.get(requestURL)
+      const result = await axios.get(`http://localhost:8080/event/${eventId}`)
+      console.log(result)
       setEventData(result.data);
       setIsLoading(false);
     }catch (e) {
@@ -66,34 +67,40 @@ function EventPage(props) {
   }
 
   useEffect(() => {
-    if(!areaRef.current) return
-    const resizeCallback = debounce(() => {
-      if(!isImgLoaded) return // 이미지 로드
 
+    const resizeCallback = () => {
+      if(!isImgLoaded) return // 이미지 로드
+      if(!eventData || eventData.eventArea.length === 0) return
+      if(!areaRef.current) return
+
+      console.log('resize');
       const childNodes = areaRef.current.childNodes
       for(let i = 0 ; i<childNodes.length; i++){
 
         const childNodes = areaRef.current.childNodes;
-        childNodes[i].coords = getImageMapCoord(eventData.eventArea[i].coord)
+        childNodes[i].coords = getImageMapCoord(eventData.eventArea[i].coordXY)
       }
-    })
+    }
 
     window.addEventListener('resize',resizeCallback)
+
     return () => {
-      console.log('remove')
+      console.log('resizeCallback remove')
       window.removeEventListener('resize',resizeCallback);
     }
-  },[areaRef.current])
+  },[eventData,areaRef.current])
 
   useEffect(() => {
     if(!params.id) {
       return
     }
-    fetchData();
+    fetchData(params.id);
   },[params.id])
 
-  useEffect(() => {
-
+  useEffect(() => { // 이미지맵에 Area 적용
+    if(!(eventData?.eventArea)){
+      return
+    }
     if(!isImgLoaded) return // 이미지 로드
     if(areaRef.current == null){ // 이미지맵 로드
       return
@@ -107,10 +114,10 @@ function EventPage(props) {
     }
 
     for(let i = 0 ; i<childNodes.length; i++){
-      childNodes[i].coords = getImageMapCoord(eventData.eventArea[i].coord)
+      childNodes[i].coords = getImageMapCoord(eventData.eventArea[i].coordXY)
     }
 
-  },[isImgLoaded,areaRef.current])
+  },[isImgLoaded,areaRef.current,eventData])
 
 
   if(isLoading) {

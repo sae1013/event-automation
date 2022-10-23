@@ -109,7 +109,7 @@ function EnrollEvent(props) {
     const absoluteX2 = Math.round((intrinsicWidth * posX2 / renderedWidth) * moduler) / moduler
     const absoluteY2 = Math.round((intrinsicHeight * posY2 / renderedHeight) * moduler) / moduler
     console.log(absoluteX1, absoluteY1, absoluteX2, absoluteY2)
-    const ret = `x1:${absoluteX1},y1:${absoluteY1},x2:${absoluteX2},y2:${absoluteY2}`
+    const ret = `${absoluteX1},${absoluteY1},${absoluteX2},${absoluteY2}`
     window.alert(ret)
   }
 
