@@ -62,6 +62,7 @@ function EnrollEvent(props) {
     }
 
     const formData = {
+      eventId:data.eventId,
       eventTitle:data.eventTitle,
       eventImageUrl:imageElement.src,
       eventStartDate:data.eventStartDate,
@@ -132,15 +133,14 @@ function EnrollEvent(props) {
         <div ref={imageRef} className={styles.preview__image}>
           <img src={"https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png"}/>
           {showRnd && <Rnd
-            className={"react-draggable-custom"}
+            className={styles.react_draggable_custom}
             ref = {RndRef}
             onClick={()=>{}}
             default={{
-              x: 200,
-              y: 200,
+              x: 0,
+              y: 0,
               width: 300,
               height: 100,
-
             }}
             // minWidth={100}
             // minHeight={100}
@@ -157,7 +157,15 @@ function EnrollEvent(props) {
         <p className={styles.tutorial2}>2. 이벤트 정보를 입력하세요</p>
         <form className={styles.hookForm} onSubmit={handleSubmit(submitHandler)}>
           <div>
-            <label>이벤트 이름</label>
+            <label>이벤트 고유번호</label>
+            {errors?.eventId && <p className={styles.form__errors}>{errors.eventTitle.message}</p>}
+            <input type='text' {...register('eventId', {
+              required: '필수 입력값',
+              minLength: { value: 1, message: '최소 1글자 이상' },
+            })} />
+          </div>
+          <div>
+            <label>이벤트 제목</label>
             {errors?.eventTitle && <p className={styles.form__errors}>{errors.eventTitle.message}</p>}
             <input type='text' {...register('eventTitle', {
               required: '필수 입력값',

@@ -63,7 +63,7 @@ section.event__info {
   font-weight: 600;
 }
 .hookForm {
-  $height: 70px;
+  $height: 50px;
 
   > div {
     margin-bottom: 1.5rem;
@@ -83,7 +83,7 @@ section.event__info {
   }
   input {
     font-size: 1rem;
-    padding: 1rem;
+    padding: .8rem;
     border: none;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(#7895B2, 0.4);
@@ -181,4 +181,9 @@ button.btn {
     font-size: 0.8rem;
     transform: translateY(-10px);
   }
+}
+
+.react_draggable_custom {
+  border: 1px solid #d63031;
+  background-color:rgba(255,255,255,0.5)
 }

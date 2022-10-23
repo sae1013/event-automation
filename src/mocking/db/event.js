@@ -1,6 +1,7 @@
 export const db = {
   events: {
-    130: {
+    '130': {
+      eventId:'130',
       eventTitle: '이미지맵 테스트1',
       eventImageUrl: 'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/event1.jpeg',
       eventStartDate: '2022-10-18',

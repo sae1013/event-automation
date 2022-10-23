@@ -1,7 +1,7 @@
 import React,{useRef,useEffect,useState} from 'react'
 import {Event130} from '../../utils/EventData';
 import styles from '../../styles/event/EventPage.module.scss';
-
+import {useParams,useLocation} from 'react-router-dom';
 //third-party
 import debounce from 'debounce';
 import axios from 'axios';
@@ -11,10 +11,12 @@ const requestURL = 'https://localhost:8080/event/130'
 function EventPage(props) {
   const [isLoading,setIsLoading] = useState(false);
   const [eventData,setEventData] = useState();
-  const event = Event130;
+
   const imageRef = useRef();
   const areaRef = useRef();
   const [isImgLoaded,setIsImgLoaded] = useState(false);
+
+  const params = useParams();
 
   const fetchData = async() => {
     setIsLoading(true)
@@ -27,6 +29,18 @@ function EventPage(props) {
     }
 
 
+  }
+
+  const onClickAreaHandler = (e) => {
+    const eventType = e.target.getAttribute('data-type');
+    const eventContents = e.target.getAttribute('data-contents');
+    switch(eventType) {
+      case 'getCoupon':
+        break
+      case 'link':
+        break
+    }
+    window.alert(eventContents)
   }
 
   const getPosition = (posArr) => { // string -> int Array
@@ -72,8 +86,11 @@ function EventPage(props) {
   },[areaRef.current])
 
   useEffect(() => {
+    if(!params.id) {
+      return
+    }
     fetchData();
-  },[])
+  },[params.id])
 
   useEffect(() => {
 
@@ -114,7 +131,7 @@ function EventPage(props) {
         <map name={"imageMap"} ref = {areaRef}>
           {eventData?.eventArea.map((area,idx) => {
             return (
-              <area key={idx} shape="rect" alt="eventBtn"/>
+              <area key={idx} shape="rect" alt="eventBtn" data-type={area.eventType} data-contents={area.couponNumber} onClick={onClickAreaHandler}/>
             )
           })}
         </map>
