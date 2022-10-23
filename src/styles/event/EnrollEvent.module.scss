@@ -34,6 +34,8 @@
 }
 
 section.event__image {
+  border-bottom: 1px solid #bbb;
+  padding-bottom: 1rem;
   .preview__image {
     width: 100%;
     position: relative;
@@ -44,7 +46,14 @@ section.event__image {
   }
 }
 
-
+section.event__keyvisual {
+  margin: 2rem 0;
+  >p {
+    font-weight: 600;
+    margin-top:2rem;
+    margin-bottom: 1rem;
+  }
+}
 section.event__info {
   margin-top: 1rem;
   border-top: 1px solid #bbb;
