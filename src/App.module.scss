@@ -1,27 +1,19 @@
-body {
-    margin: 0;
-    padding: 0;
-}
-* {
-    box-sizing: border-box;
-}
-.react-draggable {
-    background-color: transparent;
-    border: 1px solid grey;
-}
-.container {
-    width: 100%;
-    height: 50vh;
-}
+@import './styles/common/_global.scss';
 
 .react-draggable {
     background-color: transparent;
     border: 1px solid grey;
 }
-.container {
-    width: 100%;
-    height: 50vh;
+.react-draggable {
+    background-color: transparent;
+    border: 1px solid grey;
 }
+.container {
+    padding-top: var(--header-height);
+}
+
+
+
 /*.area {*/
 /*    position: absolute;*/
 /*    z-index:10;*/

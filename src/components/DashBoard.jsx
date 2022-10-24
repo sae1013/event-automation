@@ -31,13 +31,13 @@ function DashBoard(props) {
       </section>
       <section className={styles.right}>
         <Switch>
-          <Route path={"/"}>
+          <Route path={"/dashboard"} exact={true}>
             <EnrollEvent/>
           </Route>
-          <Route path="/edit">
+          <Route path="/dashboard/edit" exact={true}>
             <EditEvent/>
           </Route>
-          <Route path="/search">
+          <Route path="/dashbaord/search" exact={true}>
             <SearchEvent/>
           </Route>
         </Switch>

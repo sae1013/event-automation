@@ -1,0 +1,70 @@
+@import '../common/_global.scss';
+
+.container {
+  padding: 0 0;
+  width: 100%;
+  height: 70px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  position: fixed;
+  display: flex;
+  display: flex;
+  justify-content: center;
+
+  ul {
+    width: 80%;
+    min-width:769px;
+    display: flex;
+    padding: 0 .5rem;
+    align-items: center;
+
+    > li {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #000;
+      transition: color 0.2s;
+
+      &:not(:last-child) {
+        margin-right: 2rem;
+      }
+
+    }
+    li:hover {
+      color: var(--primary-btn-color);
+    }
+
+    li:nth-child(2){
+      margin-left: auto;
+    }
+
+
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  span {
+    display: inline-block;
+
+
+  }
+  span:nth-child(2) {
+    margin-left: 5px;
+    background-image: linear-gradient(to right, red, orange, green, blue, indigo, purple);
+    -webkit-background-clip: text;
+    color: transparent;
+    //background: red;
+    //-webkit-background-clip: text;
+    transform: translateY(5px);
+  }
+}
+
+.dashboard {
+  display: flex;
+  align-items: center;
+  span:nth-child(2) {
+    margin-left: 8px;
+  }
+}

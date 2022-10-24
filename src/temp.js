@@ -1,5 +1,5 @@
 import React, { useState,useEffect,useRef } from 'react'
-import './App.css'
+import './App.module.scss'
 
 function App() {
   const [intrinsicSize,setIntrinsicSize] = useState(0);
