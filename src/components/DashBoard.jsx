@@ -18,7 +18,7 @@ function DashBoard(props) {
     <div className={styles.container}>
       <section className={styles.left}>
         <ul>
-          <li className = {location.pathname == '/dashboard' ? styles.highlight:''} onClick={()=> history.push('/dashboard')}>
+          <li className = {location.pathname == '/dashboard/enroll' ? styles.highlight:''} onClick={()=> history.push('/dashboard/enroll')}>
             이벤트 등록하기
           </li>
           <li className= {location.pathname == '/dashboard/edit' ? styles.highlight:''}onClick={()=>history.push('/dashboard/edit')}>
@@ -31,7 +31,7 @@ function DashBoard(props) {
       </section>
       <section className={styles.right}>
         <Switch>
-          <Route path={"/dashboard"} exact={true}>
+          <Route path={"/dashboard/enroll"} exact={true}>
             <EnrollEvent/>
           </Route>
           <Route path="/dashboard/edit" exact={true}>
