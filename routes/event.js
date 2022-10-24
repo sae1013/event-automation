@@ -1,3 +1,5 @@
+const asyncHandler = require('../utils/async-handler')
+
 let bodyParser = require('body-parser');
 let parser = bodyParser.urlencoded({extended:false});
 
@@ -8,7 +10,7 @@ const upload = require("../modules/multer");
 const {uploadImageMiddleware} = require('../middlewares/upload');
 
 //이벤트 전체 조회
-eventRouter.get("/",async(req,res) => {
+eventRouter.get("/",asyncHandler(async(req,res) => {
   
   try{
     const targetEvent = await EventModel.find({
@@ -18,10 +20,10 @@ eventRouter.get("/",async(req,res) => {
     throw Error('조회에 실패');
   }
   
-})
+}))
 
 //ID로 이벤트 조회
-eventRouter.get("/:eventId",async(req,res) => {
+eventRouter.get("/:eventId",asyncHandler(async(req,res) => {
   const {eventId} = req.params;
   console.log(req.params)
   
@@ -36,7 +38,7 @@ eventRouter.get("/:eventId",async(req,res) => {
     throw Error('조회에 실패');
   }
   
-})
+}))
 
 // 이벤트 등록
 eventRouter.post("/enroll",upload.array("eventImageUrl", 4),uploadImageMiddleware, async(req,res) => {
@@ -65,6 +67,18 @@ eventRouter.post("/enroll",upload.array("eventImageUrl", 4),uploadImageMiddlewar
   
 })
 
+eventRouter.delete("/", asyncHandler(async(req,res) => {
+  const {eventId} = req.body;
+  try {
+    const deletedEvent = await EventModel.findOneAndDelete({
+      eventId:eventId
+    })
+    res.json({message:'이벤트가 삭제되었습니다'})
+
+  }catch(err){
+    throw Error('해당하는 이벤트가 없습니다.')
+  }
+
+}))
+
 module.exports = eventRouter;
-
-
