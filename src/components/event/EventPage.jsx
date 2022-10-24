@@ -68,27 +68,25 @@ function EventPage(props) {
 
   useEffect(() => {
 
-    const resizeCallback = () => {
+    const resizeCallback = debounce(() => {
       if(!isImgLoaded) return // 이미지 로드
       if(!eventData || eventData.eventArea.length === 0) return
       if(!areaRef.current) return
 
-      console.log('resize');
       const childNodes = areaRef.current.childNodes
       for(let i = 0 ; i<childNodes.length; i++){
 
         const childNodes = areaRef.current.childNodes;
         childNodes[i].coords = getImageMapCoord(eventData.eventArea[i].coordXY)
       }
-    }
+    })
 
     window.addEventListener('resize',resizeCallback)
 
     return () => {
-      console.log('resizeCallback remove')
       window.removeEventListener('resize',resizeCallback);
     }
-  },[eventData,areaRef.current])
+  },[eventData,areaRef.current,isImgLoaded])
 
   useEffect(() => {
     if(!params.id) {

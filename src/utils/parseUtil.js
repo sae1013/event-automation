@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 
 export const parseSpaceString = (str) => {
   if(str.length === 0) return [];
@@ -7,4 +8,8 @@ export const parseSpaceString = (str) => {
   }
   return splited;
 
+}
+
+export const parseDateToString = (date) => {
+  return dayjs(date).format('YYYY-MM-DD')
 }

@@ -1,7 +1,72 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import styles from '../../styles/home/Home.module.scss'
+import {OPEN,PENDING,CLOSED} from '../../utils/constant_variable.js';
+import axios from 'axios';
+import dayjs from 'dayjs'
+import {parseDateToString} from '../../utils/parseUtil.js';
+import {useHistory} from 'react-router-dom';
 
 function Home(props) {
+  const url = 'http://127.0.0.1:8080/event'
+  const [category,setCategory] = useState(OPEN);
+  const [events,setEvents] = useState([]);
+  const [filteredEvents,setFilteredEvents] = useState([]);
+  const history = useHistory();
+  const handleCategory = (e) => {
+
+    const selectedCategory = e.target.getAttribute('data-index')
+    if(!selectedCategory) return;
+    setCategory(selectedCategory)
+
+  }
+
+  const onClickEventHandler = (eventId) => {
+    history.push(`/event/${eventId}`)
+  }
+
+  const fetchData = async(url) => {
+    try{
+      const res = await axios.get(url)
+      setEvents(res.data);
+    }catch(err){
+      console.log(err)
+    }
+
+  }
+  useEffect(() => {
+    //event 정보 비동기 데이터
+    fetchData(url)
+  },[]);
+
+  useEffect(() => {
+    if(events.length === 0) return
+    const currentTime = dayjs();
+    let filtered = [];
+    switch(category) {
+      case OPEN:
+        filtered = events.filter(event => {
+          if(currentTime.isAfter(dayjs(event.eventStartDate)) && currentTime.isBefore(dayjs(event.eventEndDate)) ){
+            return true
+          }
+        })
+        break
+      case CLOSED:
+        filtered = events.filter(event => {
+          if(currentTime.isAfter(dayjs(event.eventEndDate))){
+           return true
+          }
+        })
+        break
+      case PENDING:
+        filtered = events.filter(event => {
+          if(currentTime.isBefore(dayjs(event.eventStartDate))){
+            return true
+          }
+        })
+    }
+    setFilteredEvents(filtered)
+  },[category,events])
+
   return (
     <div className={styles.container}>
       <section className={styles.top__banner}>
@@ -38,47 +103,30 @@ function Home(props) {
         </div>
       </section>
       <section className={styles.category}>
-        <ul>
-          <li className={styles.active}>진행중인 이벤트</li>
-          <li>종료된 이벤트</li>
+        <ul onClick={handleCategory}>
+          <li data-index = {OPEN} className={category === OPEN ? styles.active:''}>진행중인 이벤트</li>
+          <li data-index = {CLOSED} className={category === CLOSED ? styles.active:''}>종료된 이벤트</li>
+          <li data-index = {PENDING} className={category === PENDING ? styles.active:''}>예정된 이벤트</li>
         </ul>
       </section>
       <section className={styles.event}>
-        <h1 className={styles.section__title}>진행중인 이벤트</h1>
+        <h1 className={styles.section__title}>{category ===OPEN ? '진행중인 이벤트':category ===CLOSED ?'종료된 이벤트':'예정된 이벤트'}</h1>
         <ul className={styles.card__list}>
-          <li className={styles.card__item}>
-            <div className={styles.top}>
-              <div className={styles.image__wrap}>
-                <img src={'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/event2.jpeg'} />
-              </div>
-            </div>
-            <div className={styles.bottom}>
-              <h3 className={styles.title}>이벤트 이름</h3>
-              <p className={styles.date}>이벤트기간</p>
-            </div>
-          </li>
-          <li className={styles.card__item}>
-            <div className={styles.top}>
-              <div className={styles.image__wrap}>
-                <img src={'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/event2.jpeg'} />
-              </div>
-            </div>
-            <div className={styles.bottom}>
-              <h3 className={styles.title}>이벤트 이름</h3>
-              <p className={styles.date}>이벤트기간</p>
-            </div>
-          </li>
-          <li className={styles.card__item}>
-            <div className={styles.top}>
-              <div className={styles.image__wrap}>
-                <img src={'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/event2.jpeg'} />
-              </div>
-            </div>
-            <div className={styles.bottom}>
-              <h3 className={styles.title}>이벤트 이름</h3>
-              <p className={styles.date}>이벤트기간</p>
-            </div>
-          </li>
+          {filteredEvents.map((event) => {
+            return (
+              <li key= {event.eventId} className={styles.card__item} onClick={() => onClickEventHandler(event.eventId)}>
+                <div className={styles.top}>
+                  <div className={styles.image__wrap}>
+                    <img src={event.eventKeyVisualImageUrl} />
+                  </div>
+                </div>
+                <div className={styles.bottom}>
+                  <h3 className={styles.title}>{event.eventTitle}</h3>
+                  <p className={styles.date}>{`${parseDateToString(event.eventStartDate)} ~ ${parseDateToString(event.eventEndDate)}`}</p>
+                </div>
+              </li>
+            )
+          })}
         </ul>
       </section>
 

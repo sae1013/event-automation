@@ -6,6 +6,7 @@ import { MdOutlineAutoFixHigh } from 'react-icons/md'
 
 function Header() {
   const history = useHistory()
+
   const NavHandler = (e) => {
     const target = e.currentTarget.getAttribute('data-index')
     switch (target) {
@@ -20,6 +21,7 @@ function Header() {
         break
     }
   }
+
   return (
     <div className={styles.container}>
       <ul>

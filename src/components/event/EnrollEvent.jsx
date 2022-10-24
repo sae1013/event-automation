@@ -5,12 +5,11 @@ import { Rnd } from 'react-rnd'
 import { parseSpaceString } from '../../utils/parseUtil.js'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import axios from 'axios'
+import dayjs from 'dayjs';
 
 function EnrollEvent(props) {
   const imageRef = useRef()
   const RndRef = useRef()
-  const fileInputRef = useRef()
-  const keyVisualInputRef = useRef()
   const [showRnd, setShowRnd] = useState(false)
   const [coordBox, setCoordBox] = useState([0]) // key 값
 
@@ -45,8 +44,7 @@ function EnrollEvent(props) {
   }
 
   const submitHandler = (data) => {
-    // console.dir(fileInputRef.current.files[0])
-    // return
+
     // 이벤트 영역 데이터 뽑기
     const eventArea = []
     for (let i = 0; i < coordBox.length; i++) {
@@ -58,25 +56,15 @@ function EnrollEvent(props) {
       eventArea.push(newArea)
     }
 
-    //이미지 뽑기
-    const imageElement = imageRef.current.childNodes[0]
-    if (!imageElement) {
-
-      console.error('이벤트 이미지가 없습니다')
-      return
-    }
-
     const formData = new FormData()
-
     formData.append('eventId', data.eventId)
     formData.append('eventTitle', data.eventTitle)
-    formData.append('eventStartDate', data.eventStartDate)
-    formData.append('eventEndDate', data.eventEndDate)
+    formData.append('eventStartDate', new Date(data.eventStartDate))
+    formData.append('eventEndDate', new Date(data.eventEndDate))
     formData.append('eventArea', JSON.stringify(eventArea))
     formData.append('eventFooter', JSON.stringify(parseSpaceString(data.eventFooter)))
-    formData.append('eventImageUrl', fileInputRef.current.files[0])
-    formData.append('eventImageUrl', keyVisualInputRef.current.files[1])
-    console.log(eventArea, parseSpaceString(data.eventFooter))
+    formData.append('eventImageUrl', data.eventPageImage[0])
+    formData.append('eventImageUrl', data.keyvisualImage[0])
 
     const options = {
       method: 'POST',
@@ -118,7 +106,7 @@ function EnrollEvent(props) {
     reValidateMode: 'onChange',
 
   })
-  console.log(errors)
+  console.log(errors);
   return (
     <div className={styles.container}>
       {/*<div className={styles.floating}>*/}
@@ -137,7 +125,11 @@ function EnrollEvent(props) {
 
       <section className={styles.event__image}>
         <p className={styles.tutorial1}>1. 이벤트 페이지 전체를 등록해주세요</p>
-        <input ref={fileInputRef} type={'file'} accept={'image/*'} id='event-image' name='evnet-image'
+        {errors?.eventPageImage && <p className={styles.form__errors}>{errors.eventPageImage.message}</p>}
+        <input type={'file'} accept={'image/*'} id='event-image' name='evnet-image'
+               {...register('eventPageImage', {
+                 required:'이벤트페이지를 업로드 해주세요'
+               })}
                onChange={(event) => fileHandler(event)}>
         </input>
         <div ref={imageRef} className={styles.preview__image}>
@@ -166,8 +158,11 @@ function EnrollEvent(props) {
       </section>
       <section className={styles.event__keyvisual}>
         <p>2. 이벤트 키비주얼(배너) 이미지를 등록하세요.</p>
-        <input ref={keyVisualInputRef} type={'file'} multiple accept={'image/*'} id='event-keyvisual'
-               name='event-image'>
+        {errors?.keyvisualImage && <p className={styles.form__errors}>{errors.keyvisualImage.message}</p>}
+        <input type={'file'} multiple accept={'image/*'}
+               name='event-image' {...register('keyvisualImage',{
+                 required:'사진을 업로드 해주세요'
+        })}>
         </input>
       </section>
       <section className={styles.event__info}>
@@ -175,7 +170,7 @@ function EnrollEvent(props) {
         <form className={styles.hookForm} onSubmit={handleSubmit(submitHandler)}>
           <div>
             <label>이벤트 고유번호</label>
-            {errors?.eventId && <p className={styles.form__errors}>{errors.eventTitle.message}</p>}
+            {errors?.eventId && <p className={styles.form__errors}>{errors.eventId.message}</p>}
             <input type='text' {...register('eventId', {
               required: '필수 입력값',
               minLength: { value: 1, message: '최소 1글자 이상' },

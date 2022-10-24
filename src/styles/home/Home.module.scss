@@ -15,6 +15,7 @@
     margin-bottom: 1rem;
     background-color: #f9f9f9;
     padding: .8rem;
+    color: rgba(0,0,0,0.6);
   }
 }
 
@@ -103,7 +104,7 @@
       padding: 1rem 2rem;
       border: 10px;
       border-radius: 1.4rem;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
       //background-color: ;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
@@ -111,9 +112,9 @@
       color: #fff;
       background-color: #3B5CF6;
     }
-    li:hover {
-      opacity: 0.6;
-
+    li:hover:not(.active) {
+      color: white;
+      background-color:#bbb;
     }
   }
 
