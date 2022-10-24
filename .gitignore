@@ -1,0 +1,6 @@
+/node_modules
+.env
+s3.json
+vcs.xml
+*.iml
+*.xml
