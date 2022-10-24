@@ -14,10 +14,10 @@
 
   ul {
     width: 80%;
-    min-width:769px;
     display: flex;
     padding: 0 .5rem;
     align-items: center;
+    position: relative;
 
     > li {
       font-weight: 600;
@@ -34,10 +34,18 @@
       color: var(--primary-btn-color);
     }
 
-    li:nth-child(2){
-      margin-left: auto;
+    li:nth-child(1){
+      position: absolute;
+      left:0;
     }
-
+    li:nth-child(2){
+      position: absolute;
+      right:40px;
+    }
+    li:nth-child(3){
+      position: absolute;
+      right:10px;
+    }
 
   }
 }
@@ -56,8 +64,6 @@
     background-image: linear-gradient(to right, red, orange, green, blue, indigo, purple);
     -webkit-background-clip: text;
     color: transparent;
-    //background: red;
-    //-webkit-background-clip: text;
     transform: translateY(5px);
   }
 }
