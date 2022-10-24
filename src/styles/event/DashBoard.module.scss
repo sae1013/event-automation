@@ -7,6 +7,9 @@ $--highlight-secondary-color: #8992B0;
 
 .container {
   display: flex;
+  max-width:1380px;
+  min-width:769px;
+  margin: 0 auto;
 }
 
 .left {
@@ -37,7 +40,7 @@ $--highlight-secondary-color: #8992B0;
 
 .right {
   flex: 1;
-  min-width: 824px;
+  //min-width: 824px; // 등록페이지 반응형 수정
   min-height:100vh;
   background:var(--primary-bg-color);
 }

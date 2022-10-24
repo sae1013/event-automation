@@ -106,7 +106,7 @@ function EnrollEvent(props) {
     reValidateMode: 'onChange',
 
   })
-  console.log(errors);
+
   return (
     <div className={styles.container}>
       {/*<div className={styles.floating}>*/}
