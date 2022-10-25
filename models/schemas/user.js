@@ -6,7 +6,6 @@ const UserSchema = new Schema(
       type:String,
       required:true
     },
-
     name:{
       type:String,
       required:true,
@@ -18,9 +17,8 @@ const UserSchema = new Schema(
 
     isAdmin: {
       type:Boolean,
-      defualt:false
+      default:false
     },
-    
 
   },
   {
