@@ -65,13 +65,9 @@ const Right = styled.div`
 
 function EventMaker(props) {
   const { register, handleSubmit,watch, formState: { errors } } = useForm();
-  // console.log('error',errors)
   const ref = React.useRef();
   const fileRef = React.useRef();
   const onSubmit = data => {
-    // 파일리더에서 imageSrc도 가져온다.
-    console.log(data)
-    // console.log(errors)
   }
   const [eventKey,setEventKey] = useState([]);
   const [num,setNum] = useState(0);
@@ -89,18 +85,6 @@ function EventMaker(props) {
     setEventKey(filteredKey)
   }
 
-  const uploadImage = () => {
-    console.dir(ref.current.childNodes[0])
-    const targetImageSrc = ref.current.childNodes[0]
-    targetImageSrc.src = 'public/web3.png'
-    targetImageSrc.onload = (src) => {console.log(src)}
-  }
-
-  function readFile(event) {
-    textarea.textContent = event.target.result;
-    console.log(event.target.result);
-  }
-
   function changeFile(e) {
     let reader = new FileReader();
     console.log(e.target.files[0])
@@ -114,11 +98,6 @@ function EventMaker(props) {
       }
     }
 
-    // var file = fileRef.current;
-    // console.log(file)
-    // var reader = new FileReader();
-    // reader.addEventListener('load', readFile);
-    // reader.readAsText(file);
   }
 
   return (

@@ -6,8 +6,13 @@ import { parseSpaceString } from '../../utils/parseUtil.js'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import axios from 'axios'
 import dayjs from 'dayjs';
+import {useHistory} from 'react-router-dom';
+import {handleOpenAlertLayer} from '../../redux/slices/modalSlice.js'
+import {useDispatch} from 'react-redux';
 
 function EnrollEvent(props) {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const imageRef = useRef()
   const RndRef = useRef()
   const [showRnd, setShowRnd] = useState(false)
@@ -43,7 +48,7 @@ function EnrollEvent(props) {
     setCoordBox(filtered)
   }
 
-  const submitHandler = (data) => {
+  const submitHandler = async(data) => {
 
     // 이벤트 영역 데이터 뽑기
     const eventArea = []
@@ -55,6 +60,9 @@ function EnrollEvent(props) {
 
       eventArea.push(newArea)
     }
+    dispatch(handleOpenAlertLayer({message:'이벤트 등록이<br/>완료되었습니다' , confirmCallback: () => {
+        history.push(`/event/${eventId}`)
+      }}))
 
     const formData = new FormData()
     formData.append('eventId', data.eventId)
@@ -72,7 +80,20 @@ function EnrollEvent(props) {
       data: formData,
       url: `http://127.0.0.1:8080/event/enroll`,
     }
-    axios(options)
+    try{
+      const result = await axios(options)
+      if(result.status != 200) throw Error('이벤트생성에 실패했습니다.');
+      const eventId = result.data.eventId;
+      dispatch(handleOpenAlertLayer({message:'이벤트 등록이<br/>완료되었습니다' , confirmCallback: () => {
+        history.push(`/event/${eventId}`)
+        }}))
+
+
+    }catch(err){
+      console.log(err)
+    }
+
+
 
   }
 
@@ -148,9 +169,7 @@ function EnrollEvent(props) {
             // minWidth={100}
             // minHeight={100}
             bounds='parent'
-          >
-            {/* <Box /> */}
-          </Rnd>}
+          />}
         </div>
         <button className={styles.btn__rndBox} onClick={() => setShowRnd(true)}>사이즈측정 켜기</button>
         <button onClick={coordHandler} className={styles.btn__rndBox}>좌표값 확인</button>

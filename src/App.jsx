@@ -8,12 +8,13 @@ import FormValidate from './components/FormValidate.jsx'
 import EventPage from './components/event/EventPage.jsx'
 import Home from './components/home/Home.jsx'
 import Header from './components/layout/Header.jsx'
-
+import {useSelector} from 'react-redux';
+import Modal from './components/common/Modal.jsx';
 function App(props) {
-
   return (
     <>
       <Header />
+      <Modal />
       <div className={styles.container}>
         <Switch>
           <Route path={'/'} exact={true}>

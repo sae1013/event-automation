@@ -1,0 +1,39 @@
+.alert__container {
+  z-index:16;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width:350px;
+  height:250px;
+  background-color: #fff;
+  border-radius: 20px;
+  p {
+    margin-top: 100px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  button {
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem;
+    background-color: #3B5CF6;
+    font-size: 1rem;
+    text-align: center;
+    color:#f2f2f2;
+    //border-radius: 20px;
+    border-radius: 0;
+    border-bottom-left-radius: 17px;
+    border-bottom-right-radius: 17px;
+    cursor:pointer;
+  }
+
+}
+
+.transparent {
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.4);
+}

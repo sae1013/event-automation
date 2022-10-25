@@ -1,8 +1,12 @@
 import React from 'react'
+import styles from '../../styles/event/SearchEvent.module.scss';
 
 function SearchEvent(props) {
+
   return (
-    <div></div>
+    <div className={styles.search__container}>
+
+    </div>
   )
 }
 
