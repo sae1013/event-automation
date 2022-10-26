@@ -27,11 +27,13 @@ export const modalSlice = createSlice({
       state.transparent = action.payload
     },
     handleOpenAlertLayer: (state,action) => {
-      const {message,confirmCallback} = action.payload;
+      const {message,confirmCallback,transparent=false} = action.payload;
       state.isOpen = true
       state.targetComponent = 'AlertLayer'
-      state.message = action.payload.message;
+      state.message = message;
+      state.transparent= transparent
       confirmCallback ? state.confirmCallback = confirmCallback: null;
+
 
     },
     handleOpenCustomLayer: (state,action) => {

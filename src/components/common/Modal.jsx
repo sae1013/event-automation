@@ -9,14 +9,13 @@ const BackDrop = styled.div`
   height: 100%;
   left: 0;
   top: 0;
-  background-color: ${props => props.transparent ? '#f2f2f2' : 'rgba(0,0,0,0.7)'};
+  background-color: ${props => props.transparent ? 'transparent' : 'rgba(0,0,0,0.7)'};
   z-index: 15;
 `
 
 function Modal(props) {
   const root = document.getElementById('root')
-  const { isOpen, targetComponent: targetComponentName, transparent } = useSelector(state => state.modal)
-  console.log(targetComponentName)
+  const { isOpen, targetComponent: targetComponentName, transparent=false } = useSelector(state => state.modal)
   if (!targetComponentName || !isOpen) {
     return null
   }
@@ -26,7 +25,7 @@ function Modal(props) {
   return (
     createPortal((
       <React.Suspense>
-        <BackDrop transparent={props.transparent}>
+        <BackDrop transparent={transparent}>
         </BackDrop>
         <TargetComponent></TargetComponent>
       </React.Suspense>

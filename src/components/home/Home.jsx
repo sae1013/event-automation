@@ -34,7 +34,6 @@ function Home(props) {
 
   }
   useEffect(() => {
-    //event 정보 비동기 데이터
     fetchData(url)
   },[]);
 

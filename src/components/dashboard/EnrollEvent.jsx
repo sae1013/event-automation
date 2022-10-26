@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react'
-import styles from '../../styles/event/EnrollEvent.module.scss'
+import React, { useRef, useState,useEffect } from 'react'
+import styles from '../../styles/dashboard/EnrollEvent.module.scss'
 import { useForm } from 'react-hook-form'
 import { Rnd } from 'react-rnd'
 import { parseSpaceString } from '../../utils/parseUtil.js'
@@ -18,6 +18,12 @@ function EnrollEvent(props) {
   const [showRnd, setShowRnd] = useState(false)
   const [coordBox, setCoordBox] = useState([0]) // key 값
 
+  useEffect(() => {
+    if(!RndRef.current) {
+      return
+    }
+    window.scroll({top:imageRef.current.offsetTop-50,behavior:'smooth'})
+  },[showRnd])
 
   function fileHandler(e) {
     let reader = new FileReader()
@@ -60,9 +66,6 @@ function EnrollEvent(props) {
 
       eventArea.push(newArea)
     }
-    dispatch(handleOpenAlertLayer({message:'이벤트 등록이<br/>완료되었습니다' , confirmCallback: () => {
-        history.push(`/event/${eventId}`)
-      }}))
 
     const formData = new FormData()
     formData.append('eventId', data.eventId)
@@ -92,9 +95,6 @@ function EnrollEvent(props) {
     }catch(err){
       console.log(err)
     }
-
-
-
   }
 
   const coordHandler = () => {

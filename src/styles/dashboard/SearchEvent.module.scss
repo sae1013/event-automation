@@ -1,0 +1,100 @@
+@import '../common/_global.scss';
+.search__container { // 내부 크기 너무 크면 maxwidth 설정
+  padding: 3rem 2rem;
+  background-color: #fff;
+  height: 100%;
+
+  .title {
+    font-weight: 500;
+    font-size: 1.2rem;
+  }
+  .highlight {
+    color: var(--primary-btn-color);
+  }
+
+}
+
+.board__wrap {
+  margin-top: 2rem;
+
+  //.board__header {
+  //  display: flex;
+  //  border-bottom: 2px solid #191919;
+  //  padding: 2rem 0;
+  //   >p {
+  //     margin-right: 2rem;
+  //     font-weight: 500;
+  //     color: rgba(0,0,0,0.7);
+  //     &:last-child {
+  //       margin-left: auto;
+  //     }
+  //     &:nth-child(3){
+  //       margin-right: 2rem;
+  //     }
+  //   }
+  //
+  //}
+  //.board__list {
+  //
+  //  .board__item {
+  //    display: flex;
+  //    align-items: center;
+  //    padding: 1.5rem 0;
+  //    border-bottom: 1px solid #8992B0;
+  //
+  //    > p {
+  //      width:20px;
+  //      margin-right: 2rem;
+  //      &:nth-child(3) {
+  //        margin-left: auto;
+  //      }
+  //
+  //    }
+  //
+  //  }
+  //}
+}
+
+.board__wrap {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    th,td {
+      border-bottom: 1px solid #191919;
+      padding: 2rem 0;
+    }
+  }
+
+  thead {
+    >tr {
+      background-color:#f9f9f9;
+
+      th:nth-child(1) {
+        width: 3rem;
+
+      }
+      th:nth-child(2) {
+        width: 5rem;
+      }
+      th:nth-child(3) {
+        width: 55%;
+      }
+      th:last-child{
+        width: 3rem;
+      }
+    }
+  }
+
+  tbody {
+    td {
+      text-align: center;
+    }
+  }
+}
+.close__btn {
+  transition: all 0.2s;
+  &:hover {
+
+    opacity: 0.4;
+  }
+}

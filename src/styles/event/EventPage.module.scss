@@ -51,13 +51,17 @@
 
     > p {
       margin-bottom: .7rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+      background-color:#f9f9f9;
+      padding: 1rem 0;
     }
 
     > ul {
 
       li {
         color:#666;
-        font-size: .8rem;
+        font-size: .9rem;
         margin-bottom: .5rem;
       }
       li:hover {

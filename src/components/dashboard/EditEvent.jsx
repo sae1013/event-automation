@@ -64,6 +64,7 @@ function EditEvent(props) {
       <button onClick={() => loginHandler()}>로그인</button>
       <button onClick={() => requestHandler()}>임의 요청</button>
       <button onClick={()=> dispatch(handleOpenAlertLayer({message:'로그인이 필요합니다',confirmCallback:() => {history.push('/')}}))}>모달</button>
+      <button onClick={()=> dispatch(handleOpenAlertLayer({message:'ㄹㄴㅇㄹ'}))}>모달스타일</button>
       <button onClick={()=> dispatch(handleCloseLayer(()=>{console.log('hello')}))}>모달</button>
       <Modal></Modal>
     </div>

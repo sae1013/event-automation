@@ -1,11 +1,9 @@
 import React from 'react'
-import styles from '../styles/event/DashBoard.module.scss';
+import styles from '../../styles/dashboard/DashBoard.module.scss';
 import { Route,Switch } from 'react-router-dom'
-import FormValidate from './FormValidate.jsx'
-import EventMaker from './EventMaker.jsx'
-import EnrollEvent from './event/EnrollEvent.jsx';
-import EditEvent from './event/EditEvent.jsx';
-import SearchEvent from './event/SearchEvent.jsx';
+import EnrollEvent from './EnrollEvent.jsx';
+import EditEvent from './EditEvent.jsx';
+import SearchEvent from './SearchEvent.jsx';
 import { useHistory,useParams,useLocation } from "react-router-dom";
 
 function DashBoard(props) {
@@ -21,9 +19,9 @@ function DashBoard(props) {
           <li className = {location.pathname == '/dashboard/enroll' ? styles.highlight:''} onClick={()=> history.push('/dashboard/enroll')}>
             이벤트 등록하기
           </li>
-          <li className= {location.pathname == '/dashboard/edit' ? styles.highlight:''}onClick={()=>history.push('/dashboard/edit')}>
-            이벤트 수정하기
-          </li>
+          {/*<li className= {location.pathname == '/dashboard/edit' ? styles.highlight:''}onClick={()=>history.push('/dashboard/edit')}>*/}
+          {/*  이벤트 수정하기*/}
+          {/*</li>*/}
           <li className = {location.pathname == '/dashboard/search' ? styles.highlight:''} onClick={()=> history.push('/dashboard/search')}>
             이벤트 조회하기
           </li>
@@ -37,7 +35,7 @@ function DashBoard(props) {
           <Route path="/dashboard/edit" exact={true}>
             <EditEvent/>
           </Route>
-          <Route path="/dashbaord/search" exact={true}>
+          <Route path="/dashboard/search" exact={true}>
             <SearchEvent/>
           </Route>
         </Switch>

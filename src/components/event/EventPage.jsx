@@ -1,17 +1,21 @@
 import React,{useRef,useEffect,useState} from 'react'
-import {Event130} from '../../utils/EventData';
 import styles from '../../styles/event/EventPage.module.scss';
 import {useParams,useLocation} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {handleOpenAlertLayer} from '../../redux/slices/modalSlice.js'
+
 //third-party
 import debounce from 'debounce';
 import axios from 'axios';
-const requestURL = 'http://localhost:8080/event/130'
+import {parseDateToString} from '../../utils/parseUtil.js'
 
+
+const requestURL = 'http://localhost:8080/event/130'
 // 절대좌표 -> 상대좌표로 환산 후 이미지맵 적용
 function EventPage(props) {
   const [isLoading,setIsLoading] = useState(false);
   const [eventData,setEventData] = useState();
-
+  const dispatch = useDispatch();
   const imageRef = useRef();
   const areaRef = useRef();
   const [isImgLoaded,setIsImgLoaded] = useState(false);
@@ -37,11 +41,11 @@ function EventPage(props) {
     const eventContents = e.target.getAttribute('data-contents');
     switch(eventType) {
       case 'getCoupon':
+        dispatch(handleOpenAlertLayer({message:`쿠폰이 발급되었습니다<br/>코드: ${eventContents}`,transparent:true}))
         break
       case 'link':
         break
     }
-    window.alert(eventContents)
   }
 
   const getPosition = (posArr) => { // string -> int Array
@@ -128,7 +132,7 @@ function EventPage(props) {
       <div className={styles.pageTitle}> 진행중인 이벤트 </div>
       <div className={styles.eventHeader}>
         <h1 className={styles.eventTitle}>{eventData?.eventTitle}</h1>
-        <p className={styles.eventDate}>{`${eventData?.eventStartDate} ~ ${eventData?.eventEndDate}`}</p>
+        <p className={styles.eventDate}>{`${parseDateToString(eventData?.eventStartDate)} ~ ${parseDateToString(eventData?.eventEndDate)}`}</p>
       </div>
 
       <div className={styles.eventWrapper}>

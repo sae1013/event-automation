@@ -39,7 +39,7 @@ function Header() {
           </span>
           <span>대시보드</span>
         </li>
-        <li onClick={NavHandler} data-index={'login'}>로그인</li>
+        {/*<li onClick={NavHandler} data-index={'login'}>로그인</li>*/}
       </ul>
 
     </div>
