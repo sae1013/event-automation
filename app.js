@@ -20,7 +20,7 @@ const { authRouter, imageRouter, eventRouter,userRouter } = indexRouter;
 const app = express();
 
 // DB connection
-mongoose.connect(process.env.MONGODB_URI, (err) => {
+mongoose.connect(app.get("env") === 'development' ? process.env.MONGODB_URI : process.env.MONGODB_ATLAS_URI, (err) => {
   if (err) {
     console.log("something went wrong");
   } else {
@@ -31,7 +31,7 @@ mongoose.connection.on("connect", () => {
   console.log("mongoDB connected");
 });
 
-let whiteList = ['http://localhost:5173','https://event-automation.vercel.app','http://event-automation.vercel.app']
+let whiteList = ['http://localhost:5173','https://event-automation.vercel.app','http://event-automation.vercel.app','http://127.0.0.1:5173']
 let corsOptions = {
   origin: whiteList,
   // origin:'*',
