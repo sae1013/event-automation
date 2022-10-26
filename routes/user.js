@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt');
 
 router.get("/",asyncHandler(async (req, res) => {
     console.log(req.isAuthenticated())
-    console.log(req.user)
     res.json({message:'yes'})
 
 }))

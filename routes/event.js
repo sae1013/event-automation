@@ -25,19 +25,16 @@ eventRouter.get("/",asyncHandler(async(req,res) => {
 //ID로 이벤트 조회
 eventRouter.get("/:eventId",asyncHandler(async(req,res) => {
   const {eventId} = req.params;
-  console.log(req.params)
-  
+
   try{
     const targetEvent = await EventModel.findOne({
       eventId:eventId
     })
 
-    console.log(targetEvent)
     res.status(200).json(targetEvent)
   }catch(err){
     throw Error('조회에 실패');
   }
-  
 }))
 
 // 이벤트 등록

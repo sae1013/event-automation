@@ -21,7 +21,7 @@ const app = express();
 
 // DB connection
 // mongoose.connect(process.env.MONGODB_URI)
-mongoose.connect("mongodb://localhost:27017/event-auto", (err) => {
+mongoose.connect(process.env.MONGODB_URI, (err) => {
   if (err) {
     console.log("something went wrong");
   } else {
@@ -31,10 +31,10 @@ mongoose.connect("mongodb://localhost:27017/event-auto", (err) => {
 mongoose.connection.on("connect", () => {
   console.log("mongoDB connected");
 });
-console.log(process.env.MONGODB_URI);
 
+let whiteList = ['http://localhost:5173','https://event-automation.vercel.app','http://event-automation.vercel.app']
 let corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: whiteList,
   // origin:'*',
   credentials: true,
 
@@ -75,7 +75,6 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-  console.log('err')
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
   res.status(err.status || 500);
@@ -85,6 +84,6 @@ app.use(function (err, req, res, next) {
 });
 
 app.listen(8080, () => {
-  console.log("serverOpen");
+
 });
 module.exports = app;
