@@ -11,7 +11,7 @@ const upload = multer(
   {
     storage: multerS3({
       s3,
-      bucket: "event-auto/static",
+      bucket: process.env === 'development'? "event-auto/static" : "event-auto-real/static",
       acl: "public-read-write",
       key: function (req, file, cb) {
         const fileExtend =  file.originalname.split('.').pop()
