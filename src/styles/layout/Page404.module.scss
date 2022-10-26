@@ -1,0 +1,37 @@
+@import '../common/_global.scss';
+
+.page404__container {
+  min-width:769px;
+  height: calc(100vh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color:#EAF6F6;
+  //background-color: #EEF1FF;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  p {
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #8992B0;
+  }
+  .icon__404 {
+    //margin-left: auto;
+    display: inline-block;
+  }
+
+}
+
+.bottom {
+  margin-top: 1rem;
+
+  >svg:hover {
+    cursor:pointer;
+  }
+}

@@ -99,6 +99,7 @@ function EnrollEvent(props) {
 
   const coordHandler = () => {
     // 이미지 사이즈 구하기
+    if(!RndRef.current) return
     const imageElement = imageRef.current.childNodes[0]
     const intrinsicWidth = imageElement.naturalWidth
     const intrinsicHeight = imageElement.naturalHeight
@@ -119,6 +120,7 @@ function EnrollEvent(props) {
     const absoluteY2 = Math.round((intrinsicHeight * posY2 / renderedHeight) * moduler) / moduler
     console.log(absoluteX1, absoluteY1, absoluteX2, absoluteY2)
     const ret = `${absoluteX1},${absoluteY1},${absoluteX2},${absoluteY2}`
+
     window.alert(ret)
   }
 

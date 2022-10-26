@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from '../../styles/dashboard/DashBoard.module.scss';
-import { Route,Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import EnrollEvent from './EnrollEvent.jsx';
 import EditEvent from './EditEvent.jsx';
 import SearchEvent from './SearchEvent.jsx';
@@ -37,6 +37,9 @@ function DashBoard(props) {
           </Route>
           <Route path="/dashboard/search" exact={true}>
             <SearchEvent/>
+          </Route>
+          <Route>
+            <Redirect to={'/404page'}/>
           </Route>
         </Switch>
       </section>
