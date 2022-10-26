@@ -1,29 +1,34 @@
-import React, { useRef, useState,useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styles from '../../styles/dashboard/EnrollEvent.module.scss'
 import { useForm } from 'react-hook-form'
 import { Rnd } from 'react-rnd'
 import { parseSpaceString } from '../../utils/parseUtil.js'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import axiosInstance from '../../utils/axios.js'
-import dayjs from 'dayjs';
-import {useHistory} from 'react-router-dom';
-import {handleOpenAlertLayer} from '../../redux/slices/modalSlice.js'
-import {useDispatch} from 'react-redux';
+import dayjs from 'dayjs'
+import { useHistory } from 'react-router-dom'
+import { handleOpenAlertLayer } from '../../redux/slices/modalSlice.js'
+import { useDispatch } from 'react-redux'
 
 function EnrollEvent(props) {
-  const history = useHistory();
-  const dispatch = useDispatch();
+  const history = useHistory()
+  const dispatch = useDispatch()
   const imageRef = useRef()
   const RndRef = useRef()
   const [showRnd, setShowRnd] = useState(false)
   const [coordBox, setCoordBox] = useState([0]) // key 값
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { register, handleSubmit, onBlur, formState: { errors }, setError } = useForm({
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
 
+  })
   useEffect(() => {
-    if(!RndRef.current) {
+    if (!RndRef.current) {
       return
     }
-    window.scroll({top:imageRef.current.offsetTop-50,behavior:'smooth'})
-  },[showRnd])
+    window.scroll({ top: imageRef.current.offsetTop - 50, behavior: 'smooth' })
+  }, [showRnd])
 
   function fileHandler(e) {
     let reader = new FileReader()
@@ -54,7 +59,7 @@ function EnrollEvent(props) {
     setCoordBox(filtered)
   }
 
-  const submitHandler = async(data) => {
+  const submitHandler = async (data) => {
 
     // 이벤트 영역 데이터 뽑기
     const eventArea = []
@@ -83,23 +88,27 @@ function EnrollEvent(props) {
       data: formData,
       url: `/event/enroll`,
     }
-    try{
+    try {
+      setIsSubmitting(true)
       const result = await axiosInstance(options)
-      if(result.status != 200) throw Error('이벤트생성에 실패했습니다.');
-      const eventId = result.data.eventId;
-      dispatch(handleOpenAlertLayer({message:'이벤트 등록이<br/>완료되었습니다' , confirmCallback: () => {
-        history.push(`/event/${eventId}`)
-        }}))
+      setIsSubmitting(false)
+      if (result.status != 200) throw Error('이벤트생성에 실패했습니다.')
+      const eventId = result.data.eventId
+      dispatch(handleOpenAlertLayer({
+        message: '이벤트 등록이<br/>완료되었습니다', confirmCallback: () => {
+          history.push(`/event/${eventId}`)
+        },
+      }))
 
 
-    }catch(err){
+    } catch (err) {
       console.log(err)
     }
   }
 
   const coordHandler = () => {
     // 이미지 사이즈 구하기
-    if(!RndRef.current) return
+    if (!RndRef.current) return
     const imageElement = imageRef.current.childNodes[0]
     const intrinsicWidth = imageElement.naturalWidth
     const intrinsicHeight = imageElement.naturalHeight
@@ -123,12 +132,7 @@ function EnrollEvent(props) {
 
     window.alert(ret)
   }
-
-  const { register, handleSubmit, onBlur, formState: { errors }, setError } = useForm({
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-
-  })
+  console.log(errors)
 
   return (
     <div className={styles.container}>
@@ -145,13 +149,12 @@ function EnrollEvent(props) {
       {/*  </ul>*/}
       {/*</div>*/}
       <p className={styles.header}>이벤트 등록</p>
-
       <section className={styles.event__image}>
         <p className={styles.tutorial1}>1. 이벤트 페이지 전체를 등록해주세요</p>
         {errors?.eventPageImage && <p className={styles.form__errors}>{errors.eventPageImage.message}</p>}
-        <input type={'file'} accept={'image/*'} id='event-image' name='evnet-image'
+        <input type={'file'} accept={'image/*'}
                {...register('eventPageImage', {
-                 required:'이벤트페이지를 업로드 해주세요'
+                 required: '이벤트페이지를 업로드 해주세요',
                })}
                onChange={(event) => fileHandler(event)}>
         </input>
@@ -180,9 +183,9 @@ function EnrollEvent(props) {
       <section className={styles.event__keyvisual}>
         <p>2. 이벤트 키비주얼(배너) 이미지를 등록하세요.</p>
         {errors?.keyvisualImage && <p className={styles.form__errors}>{errors.keyvisualImage.message}</p>}
-        <input type={'file'} multiple accept={'image/*'}
-               name='event-image' {...register('keyvisualImage',{
-                 required:'사진을 업로드 해주세요'
+        <input type={'file'} accept={'image/*'}
+               name='event-image' {...register('keyvisualImage', {
+          required: '사진을 업로드 해주세요',
         })}>
         </input>
       </section>
@@ -279,7 +282,9 @@ function EnrollEvent(props) {
 
           </div>
 
-          <button type={'submit'} className={styles.btn__submitForm}>이벤트 생성</button>
+          <button disabled={isSubmitting} type={'submit'} className={styles.btn__submitForm}>
+            {isSubmitting ? '잠시만 기다려주세요':'이벤트 생성'}
+          </button>
         </form>
 
       </section>
