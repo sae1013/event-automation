@@ -1,6 +1,6 @@
+@import '../common/_global.scss';
+
 .container {
-  //display: flex;
-  //flex-direction: column;
   min-width: 769px;
   align-items: center;
   padding: 0 2rem;
@@ -71,7 +71,14 @@
   }
 }
 
-
 area:hover {
   cursor: pointer
+}
+.spinner__wrap {
+  background-color: #f9f9f9;
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
