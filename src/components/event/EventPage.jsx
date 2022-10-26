@@ -6,11 +6,9 @@ import {handleOpenAlertLayer} from '../../redux/slices/modalSlice.js'
 import {useHistory} from 'react-router-dom';
 //third-party
 import debounce from 'debounce';
-import axios from 'axios';
+import axiosInstance from '../../utils/axios.js'
 import {parseDateToString} from '../../utils/parseUtil.js'
 
-
-const requestURL = 'http://localhost:8080/event/130'
 // 절대좌표 -> 상대좌표로 환산 후 이미지맵 적용
 function EventPage(props) {
   const history = useHistory();
@@ -26,7 +24,7 @@ function EventPage(props) {
   const fetchData = async(eventId) => {
     setIsLoading(true)
     try{
-      const result = await axios.get(`http://localhost:8080/event/${eventId}`)
+      const result = await axiosInstance.get(`/event/${eventId}`)
       if(!result.data){
         dispatch(handleOpenAlertLayer({message:'해당 이벤트ID에</br>등록된 이벤트가 없습니다.'}));
         history.push('/404page')

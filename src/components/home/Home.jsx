@@ -1,13 +1,12 @@
 import React,{useState,useEffect} from 'react'
 import styles from '../../styles/home/Home.module.scss'
 import {OPEN,PENDING,CLOSED} from '../../utils/constant_variable.js';
-import axios from 'axios';
+import axiosInstance from '../../utils/axios.js';
 import dayjs from 'dayjs'
 import {parseDateToString} from '../../utils/parseUtil.js';
 import {useHistory} from 'react-router-dom';
 
 function Home(props) {
-  const url = 'http://127.0.0.1:8080/event'
   const [category,setCategory] = useState(OPEN);
   const [events,setEvents] = useState([]);
   const [filteredEvents,setFilteredEvents] = useState([]);
@@ -24,9 +23,9 @@ function Home(props) {
     history.push(`/event/${eventId}`)
   }
 
-  const fetchData = async(url) => {
+  const fetchData = async() => {
     try{
-      const res = await axios.get(url)
+      const res = await axiosInstance.get('/event')
       setEvents(res.data);
     }catch(err){
       console.log(err)
@@ -34,7 +33,7 @@ function Home(props) {
 
   }
   useEffect(() => {
-    fetchData(url)
+    fetchData()
   },[]);
 
   useEffect(() => {

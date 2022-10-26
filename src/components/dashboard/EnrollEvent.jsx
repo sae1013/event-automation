@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Rnd } from 'react-rnd'
 import { parseSpaceString } from '../../utils/parseUtil.js'
 import { AiFillCloseCircle } from 'react-icons/ai'
-import axios from 'axios'
+import axiosInstance from '../../utils/axios.js'
 import dayjs from 'dayjs';
 import {useHistory} from 'react-router-dom';
 import {handleOpenAlertLayer} from '../../redux/slices/modalSlice.js'
@@ -81,10 +81,10 @@ function EnrollEvent(props) {
       method: 'POST',
       // headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf-8' },
       data: formData,
-      url: `http://127.0.0.1:8080/event/enroll`,
+      url: `/event/enroll`,
     }
     try{
-      const result = await axios(options)
+      const result = await axiosInstance(options)
       if(result.status != 200) throw Error('이벤트생성에 실패했습니다.');
       const eventId = result.data.eventId;
       dispatch(handleOpenAlertLayer({message:'이벤트 등록이<br/>완료되었습니다' , confirmCallback: () => {

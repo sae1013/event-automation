@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styles from '../../styles/dashboard/SearchEvent.module.scss'
 import { AiFillCloseCircle } from 'react-icons/ai'
-import axios from 'axios'
+import axiosInstance from '../../utils/axios.js'
 import { handleOpenAlertLayer } from '../../redux/slices/modalSlice.js'
 import {parseDateToString} from '../../utils/parseUtil.js'
 import {useDispatch} from 'react-redux';
-const baseUrl = 'http://localhost:8080'
 
 function SearchEvent(props) {
   const [events, setEvents] = useState([])
@@ -13,7 +12,7 @@ function SearchEvent(props) {
   const dispatch = useDispatch();
   const fetchData = async (url) => {
     try {
-      const res = await axios.get(`${baseUrl}/event`)
+      const res = await axiosInstance().get('/event')
       setEvents(res.data)
     } catch (err) {
       console.log(err)
@@ -29,13 +28,13 @@ function SearchEvent(props) {
 
     try{
       const option = {
-        url:'http://127.0.0.1:8080/event',
+        url:'/event',
         method:'DELETE',
         data: {
           eventId:eventId
         }
       }
-      const result = await axios(option)
+      const result = await axiosInstance(option)
       dispatch(handleOpenAlertLayer({message:result.data.message}))
       setRefresh(!refresh)
     }catch(err){

@@ -1,24 +1,24 @@
 import React from 'react'
-import axios from 'axios';
 import {handleOpenAlertLayer,handleCloseLayer} from '../../redux/slices/modalSlice.js'
 import {useDispatch,useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
+import axiosInstance from '../../utils/axios.js'
 import Modal from '../common/Modal.jsx';
 
+//테스트 컴포넌트 (운영에 반영 x)
 function EditEvent(props) {
   const history = useHistory();
   const {isOpen,targetComponent,confirmCallback} = useSelector(state => state.modal)
   const dispatch = useDispatch();
   const deleteEventHandler = async() => {
     const option = {
-      url:'http://127.0.0.1:8080/event',
+      url:'/event',
       method:'DELETE',
       data: {
         eventId:130
       }
     }
-    axios(option)
-    console.log('요청')
+    await axiosInstance(option)
   }
 
   const loginHandler = async() => {
@@ -26,7 +26,7 @@ function EditEvent(props) {
       headers:{
         'Access-Control-Allow-Origin': 'http://localhost:8080'
       },
-      url:'http://localhost:8080/user/login',
+      url:'/user/login',
       withCredentials: true,
       method:'POST',
       data: {
@@ -34,14 +34,14 @@ function EditEvent(props) {
         password:'123123'
       }
     }
-   const res = await axios(option) //
+   const res = await axiosInstance(option)
     console.log(res)
   }
 
 
   const requestHandler = async() => {
     const option = {
-      url:'http://localhost:8080/user',
+      url:'/user',
       method:'GET',
       withCredentials:true,
       headers:{
@@ -51,7 +51,7 @@ function EditEvent(props) {
 
 
     }
-    const res = await axios(option)
+    const res = await axiosInstance(option)
     console.log(res.data);
   }
 
