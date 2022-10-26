@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start": "node app.js"
+    
+  },
+
   "dependencies": {
     "aws-sdk": "^2.1227.0",
     "bcrypt": "^5.1.0",

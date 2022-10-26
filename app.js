@@ -20,7 +20,6 @@ const { authRouter, imageRouter, eventRouter,userRouter } = indexRouter;
 const app = express();
 
 // DB connection
-// mongoose.connect(process.env.MONGODB_URI)
 mongoose.connect(process.env.MONGODB_URI, (err) => {
   if (err) {
     console.log("something went wrong");
@@ -83,7 +82,7 @@ app.use(function (err, req, res, next) {
   });
 });
 
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
 
 });
 module.exports = app;
