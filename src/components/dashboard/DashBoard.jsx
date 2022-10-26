@@ -23,7 +23,7 @@ function DashBoard(props) {
           {/*  이벤트 수정하기*/}
           {/*</li>*/}
           <li className = {location.pathname == '/dashboard/search' ? styles.highlight:''} onClick={()=> history.push('/dashboard/search')}>
-            이벤트 조회하기
+            이벤트 조회/삭제
           </li>
         </ul>
       </section>
@@ -32,9 +32,9 @@ function DashBoard(props) {
           <Route path={"/dashboard/enroll"} exact={true}>
             <EnrollEvent/>
           </Route>
-          <Route path="/dashboard/edit" exact={true}>
-            <EditEvent/>
-          </Route>
+          {/*<Route path="/dashboard/edit" exact={true}>*/}
+          {/*  <EditEvent/>*/}
+          {/*</Route>*/}
           <Route path="/dashboard/search" exact={true}>
             <SearchEvent/>
           </Route>

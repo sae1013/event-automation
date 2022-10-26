@@ -22,7 +22,7 @@ function App(props) {
           <Route path='/dashboard'>
             <DashBoard />
           </Route>
-          <Route path='/event/:id'>
+          <Route path='/event/:id' exact={true} >
             <EventPage></EventPage>
           </Route>
           <Route path='/404page' exact={true}>

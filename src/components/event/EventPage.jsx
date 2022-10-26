@@ -1,9 +1,9 @@
 import React,{useRef,useEffect,useState} from 'react'
 import styles from '../../styles/event/EventPage.module.scss';
-import {useParams,useLocation} from 'react-router-dom';
+import { useParams, useLocation, Redirect, Route } from 'react-router-dom'
 import {useDispatch} from 'react-redux';
 import {handleOpenAlertLayer} from '../../redux/slices/modalSlice.js'
-
+import {useHistory} from 'react-router-dom';
 //third-party
 import debounce from 'debounce';
 import axios from 'axios';
@@ -13,6 +13,7 @@ import {parseDateToString} from '../../utils/parseUtil.js'
 const requestURL = 'http://localhost:8080/event/130'
 // 절대좌표 -> 상대좌표로 환산 후 이미지맵 적용
 function EventPage(props) {
+  const history = useHistory();
   const [isLoading,setIsLoading] = useState(false);
   const [eventData,setEventData] = useState();
   const dispatch = useDispatch();
@@ -26,7 +27,12 @@ function EventPage(props) {
     setIsLoading(true)
     try{
       const result = await axios.get(`http://localhost:8080/event/${eventId}`)
-      console.log(result)
+      if(!result.data){
+        dispatch(handleOpenAlertLayer({message:'해당 이벤트ID에</br>등록된 이벤트가 없습니다.'}));
+        history.push('/404page')
+        return
+      }
+      console.log(result.data)
       setEventData(result.data);
       setIsLoading(false);
     }catch (e) {
@@ -38,13 +44,18 @@ function EventPage(props) {
 
   const onClickAreaHandler = (e) => {
     const eventType = e.target.getAttribute('data-type');
-    const eventContents = e.target.getAttribute('data-contents');
+    let eventContents = e.target.getAttribute('data-contents');
     switch(eventType) {
       case 'getCoupon':
         dispatch(handleOpenAlertLayer({message:`쿠폰이 발급되었습니다<br/>코드: ${eventContents}`,transparent:true}))
         break
       case 'link':
+        if(eventContents[0] != '/') { // 절대경로 포함하지않은경우
+          eventContents = `/${eventContents}`
+        }
+        history.push(eventContents)
         break
+
     }
   }
 
