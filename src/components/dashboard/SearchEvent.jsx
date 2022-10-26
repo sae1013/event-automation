@@ -12,14 +12,13 @@ function SearchEvent(props) {
   const dispatch = useDispatch();
   const fetchData = async (url) => {
     try {
-      const res = await axiosInstance().get('/event')
+      const res = await axiosInstance.get('/event')
       setEvents(res.data)
     } catch (err) {
       console.log(err)
     }
   }
 
-  console.log('events',events)
   useEffect(() => {
     fetchData()
   }, [refresh])
