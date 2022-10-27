@@ -5,12 +5,14 @@ import axiosInstance from '../../utils/axios.js';
 import dayjs from 'dayjs'
 import {parseDateToString} from '../../utils/parseUtil.js';
 import {useHistory} from 'react-router-dom';
+import {FadeLoader,PropagateLoader} from 'react-spinners'
 
 function Home(props) {
   const [category,setCategory] = useState(OPEN);
   const [events,setEvents] = useState([]);
   const [filteredEvents,setFilteredEvents] = useState([]);
   const history = useHistory();
+  const [isLoading,setIsLoading] = useState(true);
   const handleCategory = (e) => {
 
     const selectedCategory = e.target.getAttribute('data-index')
@@ -27,6 +29,7 @@ function Home(props) {
     try{
       const res = await axiosInstance.get('/event')
       setEvents(res.data);
+      setIsLoading(false);
     }catch(err){
       console.log(err)
     }
@@ -109,23 +112,33 @@ function Home(props) {
       </section>
       <section className={styles.event}>
         <h1 className={styles.section__title}>{category ===OPEN ? '진행중인 이벤트':category ===CLOSED ?'종료된 이벤트':'예정된 이벤트'}</h1>
-        <ul className={styles.card__list}>
-          {filteredEvents.map((event) => {
-            return (
-              <li key= {event.eventId} className={styles.card__item} onClick={() => onClickEventHandler(event.eventId)}>
-                <div className={styles.top}>
-                  <div className={styles.image__wrap}>
-                    <img src={event.eventKeyVisualImageUrl} />
+        {isLoading ?
+          <div className={styles.loader__wrap}>
+            <FadeLoader color={"#4649FF"}/>
+          </div>
+          :
+          <ul className={styles.card__list}>
+            {filteredEvents.map((event) => {
+              return (
+                <li key={event.eventId} className={styles.card__item}
+                    onClick={() => onClickEventHandler(event.eventId)}>
+                  <div className={styles.top}>
+                    <div className={styles.image__wrap}>
+                      <img src={event.eventKeyVisualImageUrl} />
+                    </div>
                   </div>
-                </div>
-                <div className={styles.bottom}>
-                  <h3 className={styles.title}>{event.eventTitle}</h3>
-                  <p className={styles.date}>{`${parseDateToString(event.eventStartDate)} ~ ${parseDateToString(event.eventEndDate)}`}</p>
-                </div>
-              </li>
-            )
-          })}
-        </ul>
+                  <div className={styles.bottom}>
+                    <h3 className={styles.title}>{event.eventTitle}</h3>
+                    <p
+                      className={styles.date}>{`${parseDateToString(event.eventStartDate)} ~ ${parseDateToString(event.eventEndDate)}`}</p>
+                  </div>
+                </li>
+              )
+            })
+            }
+          </ul>
+        }
+
       </section>
 
 

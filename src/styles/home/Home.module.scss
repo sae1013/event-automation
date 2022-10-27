@@ -196,3 +196,10 @@
   height: 6rem;
 
 }
+
+.loader__wrap {
+  //display: inline-block;
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+}
