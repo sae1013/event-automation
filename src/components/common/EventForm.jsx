@@ -15,15 +15,12 @@ const parseArrayToString = (array,seperator) => {
 }
 
 function EventForm(props) {
-  const testRef = useRef();
   const history = useHistory()
   const dispatch = useDispatch()
   const imageRef = useRef()
   const bannerImageRef = useRef();
   const RndRef = useRef()
-  const EventIdRef = useRef();
   const initialCoordBox = Array.from(Array(props.event.eventArea.length),(val,idx)=>idx)
-  console.log(props.event)
   const [showRnd, setShowRnd] = useState(false)
   const [coordBox, setCoordBox] = props.event.eventArea.length > 0 ? useState(initialCoordBox) : useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -75,6 +72,20 @@ function EventForm(props) {
     }
   }
 
+  function keyVisualFileHandler(e) {
+    let reader = new FileReader()
+    const file = e.target.files[0]
+    console.log(e.target)
+    if (file) {
+      reader.readAsDataURL(file)
+      reader.onloadend = function(src) {
+        const targetImageSrc = bannerImageRef.current.childNodes[0]
+        console.log(targetImageSrc)
+        targetImageSrc.src = src.currentTarget.result
+      }
+    }
+  }
+
   const addCoordBoxHandler = (e) => {
     e.preventDefault()
     if (coordBox.length === 0) {
@@ -96,7 +107,7 @@ function EventForm(props) {
     register("eventId",{value:'object'})
     console.log('suibmintg')
     console.log(data);
-    return
+
     // 이벤트 영역 데이터 뽑기
     const eventArea = []
     for (let i = 0; i < coordBox.length; i++) {
@@ -116,31 +127,31 @@ function EventForm(props) {
     formData.append('eventArea', JSON.stringify(eventArea))
     formData.append('eventFooter', JSON.stringify(parseSpaceString(data.eventFooter)))
     formData.append('eventImageUrl', data.eventPageImage[0])
-    formData.append('eventImageUrl', data.keyvisualImage[0])
+    formData.append('eventKeyVisualImageUrl', data.keyvisualImage[0])
 
     const options = {
       method: 'POST',
       // headers: { 'content-type': 'application/x-www-form-urlencoded;charset=utf-8' },
       data: formData,
-      url: `/event/enroll`,
+      url: `/event/edit`,
     }
     try {
       setIsSubmitting(true)
       const result = await axiosInstance(options)
-      setIsSubmitting(false)
-      if (result.status != 200) throw Error('이벤트생성에 실패했습니다.')
-      const eventId = result.data.eventId
+
       dispatch(handleOpenAlertLayer({
-        message: '이벤트 등록이<br/>완료되었습니다', confirmCallback: () => {
-          history.push(`/event/${eventId}`)
+        message: '이벤트 수정이<br/>완료되었습니다', confirmCallback: () => {
+          history.push(`/event/${props.event.eventId}`)
         },
       }))
 
 
     } catch (err) {
-      setIsSubmitting(false)
-      console.log(err)
+      dispatch(handleOpenAlertLayer({
+        message: err.response.data.error
+      }))
     }
+    setIsSubmitting(false)
   }
 
   const coordHandler = () => {
@@ -177,7 +188,7 @@ function EventForm(props) {
       <section className={styles.event__image}>
         <p className={styles.tutorial1}>1. 이벤트 페이지 전체를 등록해주세요</p>
         {<p className={styles.form__info}>기존과 동일한 이미지 사용시 새로 업로드 하지않아도 됩니다.</p>}
-        <input type={'file'} accept={'image/*'} ref={testRef}
+        <input type={'file'} accept={'image/*'}
                {...register('eventPageImage', {
 
                })}
@@ -206,30 +217,16 @@ function EventForm(props) {
         <button className={styles.btn__rndBox} onClick={() => setShowRnd(false)}>사이즈측정 끄기</button>
       </section>
       <section className={styles.event__keyvisual}>
+
         <p>2. 이벤트 키비주얼(배너) 이미지를 등록하세요.</p>
         {<p className={styles.form__info}>기존과 동일한 이미지 사용시 새로 업로드 하지않아도 됩니다.</p>}
         <input type={'file'} accept={'image/*'}
                name='event-image' {...register('keyvisualImage', {
 
-        })}>
-        </input>
+        }) }onChange={(event) => keyVisualFileHandler(event)}>
+        </input >
         <div ref={bannerImageRef} className={styles.preview__image}>
-          <img  src={'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'} />
-          {showRnd && <Rnd
-            className={styles.react_draggable_custom}
-            ref={RndRef}
-            onClick={() => {
-            }}
-            default={{
-              x: 0,
-              y: 0,
-              width: 300,
-              height: 100,
-            }}
-            // minWidth={100}
-            // minHeight={100}
-            bounds='parent'
-          />}
+          <img src={'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'} />
         </div>
       </section>
 
@@ -237,9 +234,9 @@ function EventForm(props) {
         <p className={styles.tutorial2}>3. 이벤트 정보를 입력하세요</p>
         <form className={styles.hookForm} onSubmit={handleSubmit(submitHandler)}>
           <div>
-            <label>이벤트 고유번호</label>
+            <label>이벤트 고유번호 <span className={styles.form__errors}>(수정불가)</span></label>
             {errors?.eventId && <p className={styles.form__errors}>{errors.eventId.message}</p>}
-            <input type='text' {...register('eventId', {
+            <input disabled type='text' {...register('eventId', {
               required: '필수 입력값',
               minLength: { value: 1, message: '최소 1글자 이상' },
             })} />

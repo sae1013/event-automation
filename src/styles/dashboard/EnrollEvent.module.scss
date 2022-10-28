@@ -57,6 +57,12 @@ section.event__keyvisual {
     margin-top:0rem;
     margin-bottom: 1rem;
   }
+  .preview__image {
+    width: 50%;
+    >img {
+      object-fit: contain;
+    }
+  }
 }
 section.event__info {
   margin-top: 1rem;

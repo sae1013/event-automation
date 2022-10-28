@@ -15,6 +15,7 @@ function EnrollEvent(props) {
   const dispatch = useDispatch()
   const imageRef = useRef()
   const RndRef = useRef()
+  const bannerImageRef = useRef();
   const [showRnd, setShowRnd] = useState(false)
   const [coordBox, setCoordBox] = useState([0]) // key 값
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -37,6 +38,19 @@ function EnrollEvent(props) {
       reader.readAsDataURL(file)
       reader.onloadend = function(src) {
         const targetImageSrc = imageRef.current.childNodes[0]
+        targetImageSrc.src = src.currentTarget.result
+      }
+    }
+  }
+
+  function keyVisualFileHandler(e) {
+    let reader = new FileReader()
+    const file = e.target.files[0]
+    if (file) {
+      reader.readAsDataURL(file)
+      reader.onloadend = function(src) {
+        const targetImageSrc = bannerImageRef.current.childNodes[0]
+        console.log(targetImageSrc)
         targetImageSrc.src = src.currentTarget.result
       }
     }
@@ -80,7 +94,7 @@ function EnrollEvent(props) {
     formData.append('eventArea', JSON.stringify(eventArea))
     formData.append('eventFooter', JSON.stringify(parseSpaceString(data.eventFooter)))
     formData.append('eventImageUrl', data.eventPageImage[0])
-    formData.append('eventImageUrl', data.keyvisualImage[0])
+    formData.append('eventKeyVisualImageUrl', data.keyvisualImage[0])
 
     const options = {
       method: 'POST',
@@ -88,11 +102,10 @@ function EnrollEvent(props) {
       data: formData,
       url: `/event/enroll`,
     }
+
     try {
       setIsSubmitting(true)
       const result = await axiosInstance(options)
-      setIsSubmitting(false)
-      if (result.status != 200) throw Error('이벤트생성에 실패했습니다.')
       const eventId = result.data.eventId
       dispatch(handleOpenAlertLayer({
         message: '이벤트 등록이<br/>완료되었습니다', confirmCallback: () => {
@@ -102,8 +115,11 @@ function EnrollEvent(props) {
 
 
     } catch (err) {
-      console.log(err)
+      dispatch(handleOpenAlertLayer({
+        message: err.response.data.error
+      }))
     }
+    setIsSubmitting(false)
   }
 
   const coordHandler = () => {
@@ -155,16 +171,15 @@ function EnrollEvent(props) {
         <input type={'file'} accept={'image/*'}
                {...register('eventPageImage', {
                  required: '이벤트페이지를 업로드 해주세요',
+                 onChange:(e) => fileHandler(e)
                })}
-               onChange={(event) => fileHandler(event)}>
+               >
         </input>
         <div ref={imageRef} className={styles.preview__image}>
           <img src={'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'} />
           {showRnd && <Rnd
             className={styles.react_draggable_custom}
             ref={RndRef}
-            onClick={() => {
-            }}
             default={{
               x: 0,
               y: 0,
@@ -183,11 +198,17 @@ function EnrollEvent(props) {
       <section className={styles.event__keyvisual}>
         <p>2. 이벤트 키비주얼(배너) 이미지를 등록하세요.</p>
         {errors?.keyvisualImage && <p className={styles.form__errors}>{errors.keyvisualImage.message}</p>}
+
         <input type={'file'} accept={'image/*'}
                name='event-image' {...register('keyvisualImage', {
-          required: '사진을 업로드 해주세요',
-        })}>
+               required: '배너를 업로드 해주세요',
+              onChange:(e) => keyVisualFileHandler(e)
+        }) } >
+
         </input>
+        <div ref={bannerImageRef} className={styles.preview__image}>
+          <img src={'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'} />
+        </div>
       </section>
       <section className={styles.event__info}>
         <p className={styles.tutorial2}>3. 이벤트 정보를 입력하세요</p>
