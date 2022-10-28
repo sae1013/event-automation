@@ -5,8 +5,10 @@ import axiosInstance from '../../utils/axios.js'
 import { handleOpenAlertLayer } from '../../redux/slices/modalSlice.js'
 import {parseDateToString} from '../../utils/parseUtil.js'
 import {useDispatch} from 'react-redux';
+import {useHistory} from 'react-router-dom';
 
 function SearchEvent(props) {
+  const history = useHistory();
   const [events, setEvents] = useState([])
   const [refresh,setRefresh] = useState(false);
   const dispatch = useDispatch();
@@ -40,7 +42,10 @@ function SearchEvent(props) {
       console.log(err);
     }
 
+  }
 
+  const editEventHandler = (eventId) => {
+    history.push(`/dashboard/edit/${eventId}`)
   }
 
   return (
@@ -67,6 +72,11 @@ function SearchEvent(props) {
                 <td>{parseDateToString(event?.eventStartDate)} ~ {parseDateToString(event?.eventEndDate)}</td>
                 <td>
                 <span className={styles.close__btn} onClick={() => deleteEventHandler(event?.eventId)}>
+                  <AiFillCloseCircle style={{ width: '2rem', height: '2rem', fill: 'red' }} />
+                </span>
+                </td>
+                <td>
+                <span className={styles.close__btn} onClick={() => editEventHandler(event?.eventId)}>
                   <AiFillCloseCircle style={{ width: '2rem', height: '2rem', fill: 'red' }} />
                 </span>
                 </td>

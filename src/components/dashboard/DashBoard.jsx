@@ -32,9 +32,9 @@ function DashBoard(props) {
           <Route path={"/dashboard/enroll"} exact={true}>
             <EnrollEvent/>
           </Route>
-          {/*<Route path="/dashboard/edit" exact={true}>*/}
-          {/*  <EditEvent/>*/}
-          {/*</Route>*/}
+          <Route path="/dashboard/edit/:id" exact={true}>
+            <EditEvent/>
+          </Route>
           <Route path="/dashboard/search" exact={true}>
             <SearchEvent/>
           </Route>
