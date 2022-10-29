@@ -24,6 +24,7 @@ function EnrollEvent(props) {
     reValidateMode: 'onChange',
 
   })
+  const placeHolderImage = 'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png';
   useEffect(() => {
     if (!RndRef.current) {
       return
@@ -34,25 +35,28 @@ function EnrollEvent(props) {
   function fileHandler(e) {
     let reader = new FileReader()
     const file = e.target.files[0]
+    const targetImageSrc = imageRef.current.childNodes[0]
     if (file) {
       reader.readAsDataURL(file)
       reader.onloadend = function(src) {
-        const targetImageSrc = imageRef.current.childNodes[0]
         targetImageSrc.src = src.currentTarget.result
       }
+    }else {
+      targetImageSrc.src = 'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'
     }
   }
 
   function keyVisualFileHandler(e) {
     let reader = new FileReader()
     const file = e.target.files[0]
+    const targetImageSrc = bannerImageRef.current.childNodes[0]
     if (file) {
       reader.readAsDataURL(file)
       reader.onloadend = function(src) {
-        const targetImageSrc = bannerImageRef.current.childNodes[0]
-        console.log(targetImageSrc)
         targetImageSrc.src = src.currentTarget.result
       }
+    }else {
+      targetImageSrc.src = 'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'
     }
   }
 
