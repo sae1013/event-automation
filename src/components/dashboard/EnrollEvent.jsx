@@ -42,7 +42,7 @@ function EnrollEvent(props) {
         targetImageSrc.src = src.currentTarget.result
       }
     }else {
-      targetImageSrc.src = 'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'
+      targetImageSrc.src = placeHolderImage
     }
   }
 
@@ -56,7 +56,7 @@ function EnrollEvent(props) {
         targetImageSrc.src = src.currentTarget.result
       }
     }else {
-      targetImageSrc.src = 'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png'
+      targetImageSrc.src = placeHolderImage
     }
   }
 

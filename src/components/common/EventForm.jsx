@@ -10,6 +10,8 @@ import { useHistory } from 'react-router-dom'
 import { handleOpenAlertLayer } from '../../redux/slices/modalSlice.js'
 import { useDispatch } from 'react-redux'
 
+const placeHolderImage = 'https://event-maker1.s3.ap-northeast-2.amazonaws.com/pages/placeholder-image.png';
+
 const parseArrayToString = (array,seperator) => {
   return array.join(seperator)
 }
@@ -62,27 +64,28 @@ function EventForm(props) {
   function fileHandler(e) { // 데이터 없으면 default이미지로 돌릴 수있도록 코드 보강해야함
     let reader = new FileReader()
     const file = e.target.files[0]
-
+    const targetImageSrc = bannerImageRef.current.childNodes[0]
     if (file) {
       reader.readAsDataURL(file)
       reader.onloadend = function(src) {
-        const targetImageSrc = imageRef.current.childNodes[0]
         targetImageSrc.src = src.currentTarget.result
       }
+    }else {
+      targetImageSrc.src = placeHolderImage
     }
   }
 
   function keyVisualFileHandler(e) {
     let reader = new FileReader()
     const file = e.target.files[0]
-    console.log(e.target)
+    const targetImageSrc = bannerImageRef.current.childNodes[0]
     if (file) {
       reader.readAsDataURL(file)
       reader.onloadend = function(src) {
-        const targetImageSrc = bannerImageRef.current.childNodes[0]
-        console.log(targetImageSrc)
         targetImageSrc.src = src.currentTarget.result
       }
+    }else {
+      targetImageSrc.src = placeHolderImage
     }
   }
 
