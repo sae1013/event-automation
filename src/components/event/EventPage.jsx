@@ -4,6 +4,7 @@ import { useParams, useLocation, Redirect, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { handleOpenAlertLayer } from '../../redux/slices/modalSlice.js'
 import { useHistory } from 'react-router-dom'
+import {getEventState} from '../../utils/parseUtil';
 //third-party
 import debounce from 'debounce'
 import axiosInstance from '../../utils/axios.js'
@@ -19,6 +20,7 @@ function EventPage(props) {
   const imageRef = useRef()
   const areaRef = useRef()
   const [isImgLoaded, setIsImgLoaded] = useState(false)
+  const [eventStatus,setEventStatus] = useState('');
 
   const params = useParams()
 
@@ -31,15 +33,14 @@ function EventPage(props) {
         history.push('/404page')
         return
       }
-      console.log(result.data)
+      
       setEventData(result.data)
       setIsLoading(false)
     } catch (e) {
-
+      dispatch(handleOpenAlertLayer({message:'네트워크 상태를 다시 확인해주세요'}))
     }
-
-
   }
+
 
   const onClickAreaHandler = (e) => {
     const eventType = e.target.getAttribute('data-type')
@@ -79,6 +80,22 @@ function EventPage(props) {
     const parsedCoordString = coordArr.join(',')
     return parsedCoordString
   }
+
+  useEffect(() => {
+    if(!eventData) return;
+    const eventState = getEventState(eventData);
+    switch(eventState){
+      case 'OPEN':
+        setEventStatus('진행중인 이벤트')
+        break
+      case 'CLOSED':
+        setEventStatus('종료된 이벤트')
+        break
+      case 'PENDING':
+        setEventStatus('예정중인 이벤트')
+        break
+    }
+  },[eventData])
 
   useEffect(() => {
 
@@ -143,7 +160,7 @@ function EventPage(props) {
   return (
     <div className={styles.container}>
 
-      <div className={styles.pageTitle}> 진행중인 이벤트</div>
+      <div className={styles.pageTitle}>{eventStatus}</div>
       <div className={styles.eventHeader}>
         <h1 className={styles.eventTitle}>{eventData?.eventTitle}</h1>
         <p

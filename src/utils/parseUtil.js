@@ -13,3 +13,22 @@ export const parseSpaceString = (str) => {
 export const parseDateToString = (date) => {
   return dayjs(date).format('YYYY-MM-DD')
 }
+export const getEventState = (event) => {
+  let currentTime = dayjs();
+  let state = 'OPEN';
+
+  if(currentTime.isAfter(dayjs(event.eventStartDate)) && currentTime.isBefore(dayjs(event.eventEndDate)) ){
+    state = 'OPEN'  
+    
+  }
+  else if(currentTime.isAfter(dayjs(event.eventEndDate))){
+    state = 'CLOSED'
+    
+  }
+  else if(currentTime.isBefore(dayjs(event.eventStartDate))) {
+    state = 'PENDING'
+    
+  }
+  return state
+}
+
