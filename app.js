@@ -1,43 +1,57 @@
 const createError = require("http-errors");
 const express = require("express");
-const bodyParser = require('body-parser');
-const expressSession = require('express-session');
+const bodyParser = require("body-parser");
+const expressSession = require("express-session");
 require("dotenv").config();
-const passportSetting = require('./modules/passport/passport');
+const passportSetting = require("./modules/passport/passport");
 //Third Party middlewares
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
-const passport = require('passport')
-const cookieSession = require('cookie-session');
+const passport = require("passport");
+const cookieSession = require("cookie-session");
 const mongoose = require("mongoose");
 
 //router
 const indexRouter = require("./routes");
-const { authRouter, imageRouter, eventRouter,userRouter } = indexRouter;
+const { authRouter, imageRouter, eventRouter, userRouter } = indexRouter;
 
 //express-app
 const app = express();
 
 // DB connection
-mongoose.connect(app.get("env") === 'development' ? process.env.MONGODB_URI : process.env.MONGODB_ATLAS_URI, (err) => {
-  if (err) {
-    console.log("something went wrong");
-  } else {
-    console.log("mongodb connected");
+mongoose.connect(
+  app.get("env") === "development"
+    ? process.env.MONGODB_URI
+    : process.env.MONGODB_ATLAS_URI,
+  (err) => {
+    if (err) {
+      console.log("something went wrong");
+    } else {
+      console.log("mongodb connected");
+    }
   }
-});
+);
 mongoose.connection.on("connect", () => {
   console.log("mongoDB connected");
 });
 
-let whiteList = ['http://localhost:5173','https://event-automation.vercel.app','http://event-automation.vercel.app','http://127.0.0.1:5173']
+let whiteList = [
+  "http://localhost:5173",
+  "https://localhost:5173",
+  "https://event-automation.vercel.app",
+  "http://event-automation.vercel.app",
+];
 let corsOptions = {
-  origin: whiteList,
-  // origin:'*',
+  origin: function(origin,callback){
+    if(whiteList.indexOf(origin) !== -1) {
+      callback(null, true);
+    }else {
+      callback(new Error('Not Allowed Origin'))
+    }
+  },
   credentials: true,
-
-}
+};
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -50,13 +64,13 @@ app.use(
   expressSession({
     resave: false,
     saveUninitialized: false, // 빈 값도 저장
-    secret: 'asdvfkvfe', // cookie 암호화 키. dotenv 라이브러리로 감춤
+    secret: "asdvfkvfe", // cookie 암호화 키. dotenv 라이브러리로 감춤
     cookie: {
       httpOnly: false,
       secure: false, // https 프로토콜만 허락하는 지 여부
-      maxAge:1000 * 60 * 60
+      maxAge: 1000 * 60 * 60,
     },
-  }),
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,8 +78,7 @@ passportSetting();
 app.use("/auth", authRouter);
 app.use("/images", imageRouter);
 app.use("/event", eventRouter);
-app.use("/user", userRouter)
-
+app.use("/user", userRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -82,7 +95,5 @@ app.use(function (err, req, res, next) {
   });
 });
 
-app.listen(process.env.PORT || 8080, () => {
-
-});
+app.listen(process.env.PORT || 8080, () => {});
 module.exports = app;
